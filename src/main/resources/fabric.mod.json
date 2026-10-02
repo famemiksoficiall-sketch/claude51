@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "raftsurvival",
+  "version": "${version}",
+  "name": "Raft Survival",
+  "description": "Лобби, режим «Выживание на плоту», сессии (соло/кооператив), акулы, чайки, ранги, таб, RGB-панель и редактор карт.",
+  "authors": ["Raft Survival"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["ru.raftsurvival.RaftSurvival"],
+    "client": ["ru.raftsurvival.client.RaftSurvivalClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

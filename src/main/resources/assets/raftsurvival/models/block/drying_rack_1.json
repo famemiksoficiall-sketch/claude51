@@ -1,0 +1,6 @@
+{
+ "parent": "minecraft:block/cube_all",
+ "textures": {
+  "all": "raftsurvival:block/drying_rack_1"
+ }
+}

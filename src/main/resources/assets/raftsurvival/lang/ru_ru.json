@@ -1,0 +1,17 @@
+{
+ "item.raftsurvival.raft_plank": "Плотовая доска",
+ "block.raftsurvival.raft_plank": "Плотовая доска",
+ "block.raftsurvival.floating_barrel": "Плавучая бочка",
+ "block.raftsurvival.desalinator": "Опреснитель",
+ "block.raftsurvival.drying_rack": "Сушилка для рыбы",
+ "item.raftsurvival.scrap": "Обломки",
+ "item.raftsurvival.rope": "Верёвка",
+ "item.raftsurvival.shark_tooth": "Акулий зуб",
+ "item.raftsurvival.gull_feather": "Перо чайки",
+ "item.raftsurvival.dried_fish": "Вяленая рыба",
+ "item.raftsurvival.harpoon": "Гарпун",
+ "item.raftsurvival.signal_flare": "Сигнальная ракета",
+ "entity.raftsurvival.shark": "Акула",
+ "entity.raftsurvival.gull": "Чайка",
+ "itemGroup.raftsurvival": "Выживание на плоту"
+}

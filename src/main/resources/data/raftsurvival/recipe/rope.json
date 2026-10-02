@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  "minecraft:string",
+  "minecraft:string",
+  "minecraft:string"
+ ],
+ "result": {
+  "id": "raftsurvival:rope",
+  "count": 1
+ }
+}
