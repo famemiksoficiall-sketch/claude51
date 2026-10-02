@@ -1,0 +1,3 @@
+net.minecraft.entity.EntityType$Builder
+net.minecraft.item.Item$Settings
+net.minecraft.block.AbstractBlock$Settings
