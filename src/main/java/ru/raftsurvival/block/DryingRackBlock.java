@@ -59,7 +59,7 @@ public class DryingRackBlock extends Block {
 			}
 			return ActionResult.SUCCESS;
 		}
-		return ActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
 	}
 
 	@Override
