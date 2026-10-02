@@ -1,0 +1,17 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "misc",
+ "pattern": [
+  "  B",
+  " / ",
+  "/  "
+ ],
+ "key": {
+  "B": "minecraft:bone",
+  "/": "minecraft:stick"
+ },
+ "result": {
+  "id": "raftsurvival:harpoon",
+  "count": 1
+ }
+}

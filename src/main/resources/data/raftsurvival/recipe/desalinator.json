@@ -1,0 +1,18 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "misc",
+ "pattern": [
+  "PRP",
+  "PBP",
+  "PPP"
+ ],
+ "key": {
+  "P": "raftsurvival:raft_plank",
+  "R": "raftsurvival:rope",
+  "B": "minecraft:bowl"
+ },
+ "result": {
+  "id": "raftsurvival:desalinator",
+  "count": 1
+ }
+}

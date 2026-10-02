@@ -1,0 +1,17 @@
+{
+ "item.raftsurvival.raft_plank": "Raft Plank",
+ "block.raftsurvival.raft_plank": "Raft Plank",
+ "block.raftsurvival.floating_barrel": "Floating Barrel",
+ "block.raftsurvival.desalinator": "Desalinator",
+ "block.raftsurvival.drying_rack": "Drying Rack",
+ "item.raftsurvival.scrap": "Scrap",
+ "item.raftsurvival.rope": "Rope",
+ "item.raftsurvival.shark_tooth": "Shark Tooth",
+ "item.raftsurvival.gull_feather": "Gull Feather",
+ "item.raftsurvival.dried_fish": "Dried Fish",
+ "item.raftsurvival.harpoon": "Harpoon",
+ "item.raftsurvival.signal_flare": "Signal Flare",
+ "entity.raftsurvival.shark": "Shark",
+ "entity.raftsurvival.gull": "Seagull",
+ "itemGroup.raftsurvival": "Raft Survival"
+}

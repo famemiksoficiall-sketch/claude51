@@ -1,0 +1,15 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  "raftsurvival:shark_tooth",
+  "raftsurvival:shark_tooth",
+  "raftsurvival:shark_tooth",
+  "raftsurvival:rope",
+  "minecraft:bone"
+ ],
+ "result": {
+  "id": "raftsurvival:signal_flare",
+  "count": 1
+ }
+}

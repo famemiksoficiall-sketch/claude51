@@ -1,0 +1,17 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "misc",
+ "pattern": [
+  "RRR",
+  "/ /",
+  "/ /"
+ ],
+ "key": {
+  "R": "raftsurvival:rope",
+  "/": "minecraft:stick"
+ },
+ "result": {
+  "id": "raftsurvival:drying_rack",
+  "count": 1
+ }
+}

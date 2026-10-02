@@ -1,0 +1,13 @@
+{
+ "variants": {
+  "stage=0": {
+   "model": "raftsurvival:block/drying_rack_0"
+  },
+  "stage=1": {
+   "model": "raftsurvival:block/drying_rack_1"
+  },
+  "stage=2": {
+   "model": "raftsurvival:block/drying_rack_2"
+  }
+ }
+}

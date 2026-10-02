@@ -1,0 +1,12 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  "raftsurvival:scrap",
+  "raftsurvival:scrap"
+ ],
+ "result": {
+  "id": "raftsurvival:raft_plank",
+  "count": 1
+ }
+}
