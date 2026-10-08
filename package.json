@@ -1,0 +1,22 @@
+{
+  "name": "shpargalka",
+  "version": "1.0.0",
+  "description": "Шпаргалка — розв'язки задач та ШІ-чат",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "ua.shpargalka.app",
+    "productName": "Шпаргалка",
+    "files": ["index.html", "electron/**", "package.json"],
+    "win": {"target": "nsis"},
+    "mac": {"target": "dmg"},
+    "linux": {"target": "AppImage"}
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  }
+}

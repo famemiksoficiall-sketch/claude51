@@ -57,6 +57,34 @@ pre{white-space:pre-wrap;background:var(--code);padding:12px;border-radius:12px;
 #toast.show{opacity:1}
 label{font-size:13px;color:var(--mut);display:block;margin:8px 0 4px}
 .typing{opacity:.6}
+
+/* --- кастомні кнопки --- */
+.btn{position:relative;overflow:hidden;box-shadow:0 4px 16px #7c5cff55,inset 0 1px 0 #ffffff40;transition:transform .15s,box-shadow .2s,filter .2s;letter-spacing:.2px}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px #7c5cff80,inset 0 1px 0 #ffffff50;filter:brightness(1.08)}
+.btn:active{transform:translateY(0) scale(.96);box-shadow:0 2px 8px #7c5cff55}
+.btn.ghost{box-shadow:inset 0 0 0 1px #8883;background:var(--panel2)}.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--acc),0 6px 18px #0004}
+.btn.red{box-shadow:0 4px 16px #ff5c7a55}.btn.red:hover{box-shadow:0 8px 24px #ff5c7a88}
+.btn:focus-visible,.meta button:focus-visible,.nav:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+.meta button{transition:transform .12s,background .2s,box-shadow .2s;border-radius:99px;padding:6px 12px}
+.meta button:hover{transform:translateY(-2px) scale(1.06);box-shadow:0 4px 12px #0004}
+.meta button:active{transform:scale(.9)}
+.meta button.act{box-shadow:0 0 14px #7c5cffaa}
+aside button.nav{transition:background .2s,transform .15s,padding-left .2s;position:relative}
+aside button.nav:hover{padding-left:18px}
+aside button.nav.on::before{content:"";position:absolute;left:0;top:20%;height:60%;width:4px;border-radius:4px;background:linear-gradient(var(--acc),var(--acc2))}
+.chips span{transition:.15s}.chips span:hover{background:var(--acc);color:#fff;transform:translateY(-2px)}
+.ripple{position:absolute;border-radius:50%;background:#fff6;transform:scale(0);animation:rp .6s linear;pointer-events:none}
+@keyframes rp{to{transform:scale(4);opacity:0}}
+.card{transition:transform .2s,box-shadow .2s}.card:hover{box-shadow:0 8px 30px #0003}
+.tab.on{animation:fadeIn .3s}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}}
+/* --- Electron: власна шапка вікна --- */
+#titlebar{display:none}
+.electron #titlebar{display:flex;position:fixed;top:0;left:0;right:0;height:38px;z-index:50;align-items:center;padding-left:14px;background:var(--panel);border-bottom:1px solid #8883;-webkit-app-region:drag;user-select:none;font-size:13px;color:var(--mut)}
+.electron #titlebar b{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;color:transparent;margin-right:auto}
+.electron #titlebar button{-webkit-app-region:no-drag;width:46px;height:38px;border:0;background:none;color:var(--text);font-size:14px;cursor:pointer;transition:background .15s}
+.electron #titlebar button:hover{background:var(--panel2)}.electron #titlebar button.x:hover{background:var(--bad);color:#fff}
+.electron body{padding-top:38px}.electron aside{top:38px;height:calc(100vh - 38px)}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--panel2);border-radius:10px;border:2px solid var(--bg)}::-webkit-scrollbar-thumb:hover{background:var(--acc)}
 @media(max-width:760px){
  body{display:block}
  aside{position:fixed;bottom:0;top:auto;width:100%;height:auto;flex-direction:row;z-index:10;padding:4px;border-right:0;border-top:1px solid #8883;overflow-x:auto}
@@ -68,6 +96,7 @@ label{font-size:13px;color:var(--mut);display:block;margin:8px 0 4px}
 </style>
 </head>
 <body>
+<div id="titlebar"><b>📝 Шпаргалка</b><button onclick="api.win('min')">—</button><button onclick="api.win('max')">▢</button><button class="x" onclick="api.win('close')">✕</button></div>
 <aside>
   <div class="logo">📝 Шпаргалка</div>
   <button class="nav on" data-t="feed">📚 <span>Стрічка</span></button>
@@ -348,6 +377,9 @@ $("#impB").onclick=()=>$("#imp").click();
 $("#imp").onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(Array.isArray(d.posts))S.posts=d.posts;if(Array.isArray(d.reqs))S.reqs=d.reqs;if(Array.isArray(d.hw))S.hw=d.hw;if(d.me?.nick)S.me=d.me;saveAll();renderMe();renderProf();toast("Імпортовано")}catch{toast("Невірний файл")}};
 $("#wipe").onclick=()=>{if(confirm("Стерти ВСІ дані?")){try{localStorage.clear()}catch{}location.reload()}};
 
+if(window.api)document.documentElement.classList.add("electron");
+document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn");if(!b)return;const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height),i=document.createElement("span");
+  i.className="ripple";i.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;b.append(i);setTimeout(()=>i.remove(),600)});
 draw();renderMe();renderFeed();
 </script>
 </body>
