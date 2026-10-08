@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="uk" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Шпаргалка — розв'язки, запити та ШІ</title>
+<style>
+:root{--bg:#0f1020;--panel:#1a1b33;--panel2:#23244a;--text:#eef0ff;--mut:#9a9dc8;--acc:#7c5cff;--acc2:#22d3a6;--bad:#ff5c7a;--warn:#ffb84d;--r:16px;--code:#0b0c1c}
+[data-theme=light]{--bg:#f2f3fb;--panel:#fff;--panel2:#eceefb;--text:#1b1c3a;--mut:#6a6d99;--code:#f4f5fc}
+*{box-sizing:border-box;margin:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+aside{width:230px;flex:none;padding:18px 12px;border-right:1px solid #8883;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px;background:var(--panel)}
+.logo{font-weight:800;font-size:21px;padding:4px 10px 16px;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;color:transparent}
+aside button.nav{background:none;border:0;color:var(--mut);text-align:left;padding:11px 12px;border-radius:12px;font-size:15px;cursor:pointer;display:flex;gap:10px;align-items:center}
+aside button.nav:hover{background:var(--panel2)}
+aside button.nav.on{background:var(--panel2);color:var(--text);font-weight:600}
+.badge{margin-left:auto;background:var(--bad);color:#fff;font-size:11px;padding:1px 7px;border-radius:99px}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:10px;border-radius:12px;background:var(--panel2);cursor:pointer}
+.ava{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:linear-gradient(135deg,var(--acc),var(--acc2));flex:none}
+main{flex:1;min-width:0;max-width:960px;margin:0 auto;padding:22px 18px 90px}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid #8882;border-radius:var(--r);padding:16px;margin-bottom:14px}
+input,textarea,select{width:100%;background:var(--panel2);border:1px solid #8883;color:var(--text);border-radius:12px;padding:10px 13px;font:inherit;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--acc)}
+textarea{resize:vertical;min-height:100px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1;min-width:120px}
+.btn{background:linear-gradient(135deg,var(--acc),#5b8cff);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-weight:600;cursor:pointer;flex:none;font-size:14px}
+.btn.ghost{background:var(--panel2);color:var(--text)}.btn.red{background:var(--bad)}.btn.sm{padding:6px 11px;font-size:13px}
+h2{font-size:19px;margin-bottom:12px}h3{font-size:16px}
+.tag{display:inline-block;font-size:12px;background:var(--panel2);color:var(--acc2);padding:3px 9px;border-radius:99px;margin:0 6px 4px 0}
+.tag.cls{color:var(--warn)}
+pre{white-space:pre-wrap;background:var(--code);padding:12px;border-radius:12px;margin:8px 0;font-family:ui-monospace,monospace;font-size:13px;overflow:auto}
+.post .head{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.post img{max-width:100%;border-radius:12px;margin:6px 0}
+.meta{color:var(--mut);font-size:13px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.meta button{background:var(--panel2);border:0;color:var(--text);cursor:pointer;border-radius:10px;padding:5px 10px;font-size:13px}
+.meta button.act{background:var(--acc);color:#fff}
+.cm{border-top:1px solid #8882;margin-top:10px;padding-top:8px;font-size:14px}
+.cm p{margin:5px 0}.cm b{color:var(--acc2)}
+.solved{color:var(--acc2);font-weight:600}
+.layout2{display:grid;grid-template-columns:200px 1fr;gap:14px}
+#chatList{display:flex;flex-direction:column;gap:6px}
+#chatList div{padding:8px 10px;border-radius:10px;background:var(--panel2);cursor:pointer;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#chatList div.on{outline:2px solid var(--acc)}
+#chat{height:52vh;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:4px}
+.msg{max-width:85%;padding:10px 14px;border-radius:16px;line-height:1.5;word-wrap:break-word}
+.msg.me{align-self:flex-end;background:linear-gradient(135deg,var(--acc),#5b8cff);color:#fff}
+.msg.ai{align-self:flex-start;background:var(--panel2)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chips span{background:var(--panel2);padding:6px 11px;border-radius:99px;font-size:13px;cursor:pointer}
+.empty{color:var(--mut);text-align:center;padding:30px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--panel2);border-radius:14px;padding:14px;text-align:center}.stat b{font-size:24px;display:block}
+.lb{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #8882}
+.clock{font-size:54px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums;margin:8px 0}
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--acc);color:#fff;padding:10px 18px;border-radius:12px;opacity:0;transition:.3s;pointer-events:none;z-index:20}
+#toast.show{opacity:1}
+label{font-size:13px;color:var(--mut);display:block;margin:8px 0 4px}
+.typing{opacity:.6}
+
+/* --- кастомні кнопки --- */
+.btn{position:relative;overflow:hidden;box-shadow:0 4px 16px #7c5cff55,inset 0 1px 0 #ffffff40;transition:transform .15s,box-shadow .2s,filter .2s;letter-spacing:.2px}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px #7c5cff80,inset 0 1px 0 #ffffff50;filter:brightness(1.08)}
+.btn:active{transform:translateY(0) scale(.96);box-shadow:0 2px 8px #7c5cff55}
+.btn.ghost{box-shadow:inset 0 0 0 1px #8883;background:var(--panel2)}.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--acc),0 6px 18px #0004}
+.btn.red{box-shadow:0 4px 16px #ff5c7a55}.btn.red:hover{box-shadow:0 8px 24px #ff5c7a88}
+.btn:focus-visible,.meta button:focus-visible,.nav:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+.meta button{transition:transform .12s,background .2s,box-shadow .2s;border-radius:99px;padding:6px 12px}
+.meta button:hover{transform:translateY(-2px) scale(1.06);box-shadow:0 4px 12px #0004}
+.meta button:active{transform:scale(.9)}
+.meta button.act{box-shadow:0 0 14px #7c5cffaa}
+aside button.nav{transition:background .2s,transform .15s,padding-left .2s;position:relative}
+aside button.nav:hover{padding-left:18px}
+aside button.nav.on::before{content:"";position:absolute;left:0;top:20%;height:60%;width:4px;border-radius:4px;background:linear-gradient(var(--acc),var(--acc2))}
+.chips span{transition:.15s}.chips span:hover{background:var(--acc);color:#fff;transform:translateY(-2px)}
+.ripple{position:absolute;border-radius:50%;background:#fff6;transform:scale(0);animation:rp .6s linear;pointer-events:none}
+@keyframes rp{to{transform:scale(4);opacity:0}}
+.card{transition:transform .2s,box-shadow .2s}.card:hover{box-shadow:0 8px 30px #0003}
+.tab.on{animation:fadeIn .3s}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}}
+/* --- Electron: власна шапка вікна --- */
+#titlebar{display:none}
+.electron #titlebar{display:flex;position:fixed;top:0;left:0;right:0;height:38px;z-index:50;align-items:center;padding-left:14px;background:var(--panel);border-bottom:1px solid #8883;-webkit-app-region:drag;user-select:none;font-size:13px;color:var(--mut)}
+.electron #titlebar b{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;color:transparent;margin-right:auto}
+.electron #titlebar button{-webkit-app-region:no-drag;width:46px;height:38px;border:0;background:none;color:var(--text);font-size:14px;cursor:pointer;transition:background .15s}
+.electron #titlebar button:hover{background:var(--panel2)}.electron #titlebar button.x:hover{background:var(--bad);color:#fff}
+.electron body{padding-top:38px}.electron aside{top:38px;height:calc(100vh - 38px)}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--panel2);border-radius:10px;border:2px solid var(--bg)}::-webkit-scrollbar-thumb:hover{background:var(--acc)}
+@media(max-width:760px){
+ body{display:block}
+ aside{position:fixed;bottom:0;top:auto;width:100%;height:auto;flex-direction:row;z-index:10;padding:4px;border-right:0;border-top:1px solid #8883;overflow-x:auto}
+ .logo,.me{display:none}
+ aside button.nav{flex-direction:column;gap:2px;font-size:11px;padding:7px 10px;flex:none;align-items:center}
+ .layout2{grid-template-columns:1fr}
+ #chatList{flex-direction:row;overflow-x:auto}#chatList div{flex:none;max-width:150px}
+}
+</style>
+</head>
+<body>
+<div id="titlebar"><b>📝 Шпаргалка</b><button onclick="api.win('min')">—</button><button onclick="api.win('max')">▢</button><button class="x" onclick="api.win('close')">✕</button></div>
+<aside>
+  <div class="logo">📝 Шпаргалка</div>
+  <button class="nav on" data-t="feed">📚 <span>Стрічка</span></button>
+  <button class="nav" data-t="req">🙋 <span>Запити</span><i class="badge" id="reqBadge" hidden></i></button>
+  <button class="nav" data-t="add">➕ <span>Додати</span></button>
+  <button class="nav" data-t="ai">🤖 <span>ШІ-чат</span></button>
+  <button class="nav" data-t="tools">🧰 <span>Інструменти</span></button>
+  <button class="nav" data-t="top">🏆 <span>Рейтинг</span></button>
+  <button class="nav" data-t="prof">⚙️ <span>Профіль</span></button>
+  <div class="me" onclick="go('prof')"><div class="ava" id="meAva">🙂</div><div><b id="meName">гість</b><div style="font-size:12px;color:var(--mut)" id="mePts">0 балів</div></div></div>
+</aside>
+
+<main>
+<!-- СТРІЧКА -->
+<section id="feed" class="tab on">
+  <div class="card">
+    <div class="row"><input id="q" placeholder="🔍 Пошук за назвою, текстом, тегом"></div>
+    <div class="row" style="margin-top:10px">
+      <select id="fSubj"></select>
+      <select id="fCls"></select>
+      <select id="fSort"><option value="new">Нові</option><option value="top">Найкращі</option><option value="disc">Обговорювані</option></select>
+      <select id="fView"><option value="all">Усі</option><option value="mine">Мої</option><option value="fav">Збережені</option></select>
+    </div>
+  </div>
+  <div id="list"></div>
+</section>
+
+<!-- ЗАПИТИ -->
+<section id="req" class="tab">
+  <div class="card">
+    <h2>🙋 Попросити розв'язок</h2>
+    <div class="row"><input id="rTitle" placeholder="Яка задача? (напр. «Фізика, §8, №14»)"><select id="rSubj"></select><select id="rCls"></select></div>
+    <textarea id="rBody" style="margin-top:10px;min-height:70px" placeholder="Умова задачі…"></textarea>
+    <div style="margin-top:10px"><button class="btn" id="rPub">Створити запит</button></div>
+  </div>
+  <div id="rList"></div>
+</section>
+
+<!-- ДОДАТИ -->
+<section id="add" class="tab">
+  <div class="card">
+    <h2 id="addH">➕ Виклади розв'язок</h2>
+    <label>Назва</label><input id="title" placeholder="Напр. «Алгебра, §12, №5»">
+    <div class="row"><div><label>Предмет</label><select id="subjIn"></select></div><div><label>Клас</label><select id="clsIn"></select></div></div>
+    <label>Теги (через кому)</label><input id="tags" placeholder="рівняння, дискримінант">
+    <label>Умова</label><textarea id="cond" style="min-height:70px" placeholder="Текст задачі…"></textarea>
+    <label>Розв'язок (кожен рядок — крок)</label><textarea id="body" placeholder="Крок 1…&#10;Крок 2…"></textarea>
+    <label>Відповідь</label><input id="ans" placeholder="Напр. x = 2; 3">
+    <label>Фото розв'язку (необовʼязково)</label><input type="file" id="img" accept="image/*">
+    <div class="row" style="margin-top:12px"><label style="margin:0;flex:none"><input type="checkbox" id="anon" style="width:auto"> Анонімно</label>
+      <span></span><button class="btn ghost" id="addCancel" hidden>Скасувати</button><button class="btn" id="pub">Опублікувати</button></div>
+    <input type="hidden" id="editId"><input type="hidden" id="forReq">
+  </div>
+</section>
+
+<!-- ШІ -->
+<section id="ai" class="tab">
+  <div class="card">
+    <h2>🤖 ШІ-помічник</h2>
+    <div class="layout2">
+      <div><button class="btn sm" style="width:100%;margin-bottom:8px" id="newChat">+ Новий чат</button><div id="chatList"></div></div>
+      <div>
+        <div class="row" style="margin-bottom:8px"><select id="aiSubj"></select><select id="aiMode"><option value="explain">Пояснити крок за кроком</option><option value="answer">Коротка відповідь</option><option value="check">Перевірити мій розв'язок</option><option value="simple">Пояснити як 10-річному</option></select></div>
+        <div id="chat"></div>
+        <div class="chips" id="chips"></div>
+        <form class="row" id="chatForm" style="flex-wrap:nowrap"><input id="chatIn" placeholder="Напиши умову задачі…" autocomplete="off"><button class="btn">➤</button></form>
+        <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="aiToPost">📤 Зробити пост з останньої відповіді</button><button class="btn ghost sm" id="aiClear">🗑 Видалити чат</button></div>
+        <p style="font-size:12px;color:var(--mut);margin-top:8px" id="aiState"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ІНСТРУМЕНТИ -->
+<section id="tools" class="tab">
+  <div class="card"><h2>🧮 Калькулятор і рівняння</h2>
+    <input id="calcIn" placeholder="2*(3+4)^2  або  x^2-5x+6=0  або  2x+3=11">
+    <div class="row" style="margin-top:10px"><button class="btn" id="calcGo">Порахувати</button></div>
+    <pre id="calcOut" hidden></pre></div>
+  <div class="card"><h2>⏱ Таймер Pomodoro</h2>
+    <div class="clock" id="clock">25:00</div>
+    <div class="row" style="justify-content:center"><button class="btn" id="pStart">Старт</button><button class="btn ghost" id="pReset">Скинути</button>
+    <select id="pLen" style="max-width:130px"><option value="25">25 хв</option><option value="15">15 хв</option><option value="5">5 хв</option><option value="45">45 хв</option></select></div></div>
+  <div class="card"><h2>🗒 Нотатки</h2><textarea id="notes" placeholder="Швидкі нотатки (зберігаються автоматично)…"></textarea></div>
+  <div class="card"><h2>📅 Домашні завдання</h2>
+    <div class="row" style="flex-wrap:nowrap"><input id="hwIn" placeholder="Що задали?"><input id="hwDate" type="date" style="max-width:160px"><button class="btn" id="hwAdd">+</button></div>
+    <div id="hwList" style="margin-top:10px"></div></div>
+</section>
+
+<!-- РЕЙТИНГ -->
+<section id="top" class="tab">
+  <div class="card"><h2>🏆 Рейтинг авторів</h2><div id="lb"></div></div>
+</section>
+
+<!-- ПРОФІЛЬ -->
+<section id="prof" class="tab">
+  <div class="card"><h2>⚙️ Профіль</h2>
+    <div class="row"><div><label>Нік</label><input id="pNick" maxlength="20"></div><div><label>Аватар</label><select id="pAva"></select></div><div><label>Клас</label><select id="pCls"></select></div></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="pSave">Зберегти</button><button class="btn ghost" id="theme">🌓 Тема</button></div></div>
+  <div class="card"><h2>📊 Моя статистика</h2><div class="grid3" id="stats"></div></div>
+  <div class="card"><h2>🤖 Справжній ШІ (Anthropic API)</h2>
+    <p style="font-size:13px;color:var(--mut);margin-bottom:8px">Без ключа чат працює у демо-режимі (локальний розв'язувач). Ключ зберігається лише в твоєму браузері.</p>
+    <input id="apiKey" type="password" placeholder="sk-ant-…"><div style="margin-top:10px"><button class="btn" id="keySave">Зберегти ключ</button></div></div>
+  <div class="card"><h2>💾 Дані</h2><div class="row">
+    <button class="btn ghost" id="exp">⬇ Експорт</button><button class="btn ghost" id="impB">⬆ Імпорт</button><input type="file" id="imp" accept=".json" hidden>
+    <button class="btn red" id="wipe">Стерти все</button></div></div>
+</section>
+</main>
+<div id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{toast("Не вдалося зберегти (мало місця?)")}}};
+const SUBJ=["Математика","Алгебра","Геометрія","Фізика","Хімія","Біологія","Українська мова","Література","Історія","Англійська","Інформатика","Географія"];
+const CLS=[5,6,7,8,9,10,11];const AVAS=["🙂","😎","🤓","🦊","🐱","🐼","🦄","🚀","👾","🔥"];
+let S={me:LS.get("me",{nick:"гість",ava:"🙂",cls:9}),posts:LS.get("posts",null),reqs:LS.get("reqs",[]),chats:LS.get("chats",[]),fav:LS.get("fav",[]),votes:LS.get("votes",{}),hw:LS.get("hw",[]),cur:null};
+if(!S.posts)S.posts=[{id:1,title:"Алгебра: x² − 5x + 6 = 0",subj:"Алгебра",cls:8,tags:["рівняння","дискримінант"],cond:"Розв'язати рівняння x² − 5x + 6 = 0",body:"D = b² − 4ac = 25 − 24 = 1\nx₁ = (5 + 1)/2 = 3\nx₂ = (5 − 1)/2 = 2",ans:"x = 2; 3",author:"demo",ava:"🤓",up:3,down:0,comments:[{a:"Оля",t:"Дякую, допомогло!",d:Date.now()}],t:Date.now()}];
+const saveAll=()=>{LS.set("me",S.me);LS.set("posts",S.posts);LS.set("reqs",S.reqs);LS.set("chats",S.chats);LS.set("fav",S.fav);LS.set("votes",S.votes);LS.set("hw",S.hw)};
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("show"),2200)}
+const fill=(sel,arr,first,fmt=x=>x)=>{sel.innerHTML=(first?`<option value="">${first}</option>`:"")+arr.map(x=>`<option value="${x}">${fmt(x)}</option>`).join("")};
+["#fSubj"].forEach(s=>fill($(s),SUBJ,"Усі предмети"));["#subjIn","#rSubj","#aiSubj"].forEach(s=>fill($(s),SUBJ));
+fill($("#fCls"),CLS,"Усі класи",c=>c+" клас");["#clsIn","#rCls","#pCls"].forEach(s=>fill($(s),CLS,"",c=>c+" клас"));fill($("#pAva"),AVAS);
+
+/* навігація */
+function go(t){$$("aside .nav,.tab").forEach(e=>e.classList.remove("on"));$(`[data-t=${t}]`).classList.add("on");$("#"+t).classList.add("on");({feed:renderFeed,req:renderReqs,top:renderLb,prof:renderProf,ai:renderChat,tools:renderHw})[t]?.();scrollTo(0,0)}
+$$("aside .nav").forEach(b=>b.onclick=()=>go(b.dataset.t));
+
+/* бали */
+const pointsOf=n=>S.posts.filter(p=>p.author===n).reduce((s,p)=>s+p.up*5-p.down+(p.solvedReq?10:0)+10,0);
+function renderMe(){$("#meAva").textContent=S.me.ava;$("#meName").textContent=S.me.nick;$("#mePts").textContent=pointsOf(S.me.nick)+" балів";
+  const open=S.reqs.filter(r=>!r.done).length;$("#reqBadge").hidden=!open;$("#reqBadge").textContent=open}
+
+/* СТРІЧКА */
+function renderFeed(){
+  const q=$("#q").value.toLowerCase(),sj=$("#fSubj").value,cl=$("#fCls").value,so=$("#fSort").value,vw=$("#fView").value;
+  let a=S.posts.filter(p=>(!sj||p.subj===sj)&&(!cl||p.cls==cl)&&(vw==="all"||(vw==="mine"?p.author===S.me.nick:S.fav.includes(p.id)))&&
+    (p.title+" "+p.body+" "+p.cond+" "+p.tags.join(" ")).toLowerCase().includes(q));
+  a.sort((x,y)=>so==="top"?(y.up-y.down)-(x.up-x.down):so==="disc"?y.comments.length-x.comments.length:y.t-x.t);
+  $("#list").innerHTML=a.length?a.map(postHtml).join(""):'<div class="empty">Нічого не знайдено 🤷<br>Створи запит у розділі «Запити»</div>';
+  renderMe()
+}
+function postHtml(p){
+  const v=S.votes[p.id],mine=p.author===S.me.nick&&!p.anon;
+  return `<article class="card post" id="p${p.id}">
+  <div class="head"><div class="ava">${p.anon?"🕶":esc(p.ava)}</div><div><b>${p.anon?"Анонім":esc(p.author)}</b><div style="font-size:12px;color:var(--mut)">${new Date(p.t).toLocaleString("uk")}</div></div></div>
+  <span class="tag">${esc(p.subj)}</span><span class="tag cls">${p.cls} клас</span>${p.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join("")}
+  <h3>${esc(p.title)}</h3>
+  ${p.cond?`<p style="color:var(--mut);margin:6px 0">${esc(p.cond)}</p>`:""}
+  <pre>${esc(p.body)}</pre>${p.ans?`<p class="solved">✅ Відповідь: ${esc(p.ans)}</p>`:""}
+  ${p.img?`<img src="${p.img}" alt="фото розв'язку">`:""}
+  <div class="meta">
+    <button class="${v==="u"?"act":""}" onclick="vote(${p.id},'u')">👍 ${p.up}</button><button class="${v==="d"?"act":""}" onclick="vote(${p.id},'d')">👎 ${p.down}</button>
+    <button class="${S.fav.includes(p.id)?"act":""}" onclick="favT(${p.id})">🔖</button>
+    <button onclick="copyP(${p.id})">📋</button><button onclick="aiAsk(${p.id})">🤖 Пояснити</button>
+    ${mine?`<button onclick="editP(${p.id})">✏️</button><button onclick="delP(${p.id})">🗑</button>`:""}
+    <button onclick="document.querySelector('#c${p.id}').hidden^=1">💬 ${p.comments.length}</button></div>
+  <div class="cm" id="c${p.id}" hidden>${p.comments.map(c=>`<p><b>${esc(c.a)}</b>: ${esc(c.t)}</p>`).join("")}
+    <div class="row" style="flex-wrap:nowrap;margin-top:8px"><input id="ci${p.id}" placeholder="Коментар…" onkeydown="if(event.key==='Enter')comment(${p.id})"><button class="btn sm" onclick="comment(${p.id})">➤</button></div></div></article>`}
+window.vote=(id,d)=>{const p=S.posts.find(x=>x.id===id),v=S.votes[id];
+  if(v==="u")p.up--;if(v==="d")p.down--;
+  if(v===d)delete S.votes[id];else{S.votes[id]=d;d==="u"?p.up++:p.down++}saveAll();renderFeed()};
+window.favT=id=>{const i=S.fav.indexOf(id);i<0?S.fav.push(id):S.fav.splice(i,1);saveAll();renderFeed()};
+window.copyP=id=>{const p=S.posts.find(x=>x.id===id);navigator.clipboard?.writeText(`${p.title}\n${p.cond}\n\n${p.body}\nВідповідь: ${p.ans}`).then(()=>toast("Скопійовано"),()=>toast("Не вдалося скопіювати"))};
+window.comment=id=>{const i=$("#ci"+id),t=i.value.trim();if(!t)return;S.posts.find(x=>x.id===id).comments.push({a:S.me.nick,t,d:Date.now()});saveAll();renderFeed();$("#c"+id).hidden=false};
+window.delP=id=>{if(!confirm("Видалити пост?"))return;S.posts=S.posts.filter(p=>p.id!==id);saveAll();renderFeed()};
+window.editP=id=>{const p=S.posts.find(x=>x.id===id);go("add");$("#addH").textContent="✏️ Редагувати";$("#editId").value=id;
+  $("#title").value=p.title;$("#subjIn").value=p.subj;$("#clsIn").value=p.cls;$("#tags").value=p.tags.join(", ");$("#cond").value=p.cond;$("#body").value=p.body;$("#ans").value=p.ans;$("#anon").checked=p.anon;$("#addCancel").hidden=false};
+window.aiAsk=id=>{const p=S.posts.find(x=>x.id===id);go("ai");newChat();$("#aiSubj").value=p.subj;$("#chatIn").value=`Поясни розв'язок: ${p.cond||p.title}\n${p.body}`;$("#chatForm").requestSubmit()};
+["#q","#fSubj","#fCls","#fSort","#fView"].forEach(s=>$(s).addEventListener("input",renderFeed));
+
+/* ДОДАТИ */
+function resetAdd(){["#title","#tags","#cond","#body","#ans","#editId","#forReq","#img"].forEach(s=>$(s).value="");$("#anon").checked=false;$("#addH").textContent="➕ Виклади розв'язок";$("#addCancel").hidden=true}
+$("#addCancel").onclick=()=>{resetAdd();go("feed")};
+const readImg=f=>new Promise(res=>{if(!f)return res(null);if(f.size>1.5e6){toast("Фото завелике (макс 1.5 МБ)");return res(null)}const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res(null);r.readAsDataURL(f)});
+$("#pub").onclick=async()=>{
+  const title=$("#title").value.trim(),body=$("#body").value.trim();if(!title||!body)return toast("Додай назву й розв'язок");
+  const eid=+$("#editId").value,img=await readImg($("#img").files[0]);
+  const d={title,body,subj:$("#subjIn").value,cls:+$("#clsIn").value,tags:$("#tags").value.split(",").map(t=>t.trim()).filter(Boolean),cond:$("#cond").value.trim(),ans:$("#ans").value.trim(),anon:$("#anon").checked};
+  if(eid){const p=S.posts.find(x=>x.id===eid);Object.assign(p,d);if(img)p.img=img;toast("Оновлено")}
+  else{const id=Date.now();S.posts.push({id,...d,img,author:S.me.nick,ava:S.me.ava,up:0,down:0,comments:[],t:id});
+    const rid=+$("#forReq").value;if(rid){const r=S.reqs.find(x=>x.id===rid);if(r){r.done=true;S.posts.at(-1).solvedReq=true}}toast("Опубліковано! +10 балів")}
+  saveAll();resetAdd();go("feed")};
+
+/* ЗАПИТИ */
+$("#rPub").onclick=()=>{const t=$("#rTitle").value.trim();if(!t)return toast("Опиши задачу");
+  S.reqs.push({id:Date.now(),title:t,body:$("#rBody").value.trim(),subj:$("#rSubj").value,cls:+$("#rCls").value,author:S.me.nick,done:false,t:Date.now()});
+  $("#rTitle").value=$("#rBody").value="";saveAll();renderReqs();toast("Запит створено")};
+function renderReqs(){const a=[...S.reqs].sort((x,y)=>x.done-y.done||y.t-x.t);
+  $("#rList").innerHTML=a.length?a.map(r=>`<div class="card"><span class="tag">${esc(r.subj)}</span><span class="tag cls">${r.cls} клас</span>${r.done?'<span class="solved">✅ розв\'язано</span>':""}
+  <h3>${esc(r.title)}</h3><p style="color:var(--mut);margin:6px 0">${esc(r.body)}</p><div class="meta">@${esc(r.author)}
+  ${!r.done?`<button onclick="solveReq(${r.id})">✍️ Розв'язати</button><button onclick="aiReq(${r.id})">🤖 Спитати ШІ</button>`:""}
+  ${r.author===S.me.nick?`<button onclick="delReq(${r.id})">🗑</button>`:""}</div></div>`).join(""):'<div class="empty">Запитів поки немає</div>';renderMe()}
+window.solveReq=id=>{const r=S.reqs.find(x=>x.id===id);go("add");$("#title").value=r.title;$("#cond").value=r.body;$("#subjIn").value=r.subj;$("#clsIn").value=r.cls;$("#forReq").value=id};
+window.aiReq=id=>{const r=S.reqs.find(x=>x.id===id);go("ai");newChat();$("#aiSubj").value=r.subj;$("#chatIn").value=r.title+"\n"+r.body;$("#chatForm").requestSubmit()};
+window.delReq=id=>{S.reqs=S.reqs.filter(r=>r.id!==id);saveAll();renderReqs()};
+
+/* ШІ-ЧАТ */
+const MODE={explain:"Поясни розв'язок докладно, крок за кроком.",answer:"Дай коротку відповідь з мінімумом пояснень.",check:"Перевір розв'язок користувача і вкажи помилки.",simple:"Поясни максимально просто, як десятирічній дитині."};
+const CHIPS=["Розв'яжи x^2-5x+6=0","Поясни теорему Піфагора","Що таке дискримінант?","Перевір: 2x+3=11, x=4","Склади план твору"];
+function newChat(){const c={id:Date.now(),title:"Новий чат",msgs:[]};S.chats.unshift(c);S.cur=c.id;saveAll();renderChat()}
+const curChat=()=>S.chats.find(c=>c.id===S.cur);
+function md(t){return esc(t).replace(/```([\s\S]*?)```/g,"<pre>$1</pre>").replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>")}
+function renderChat(){
+  if(!S.chats.length)newChat();if(!curChat())S.cur=S.chats[0].id;
+  $("#chatList").innerHTML=S.chats.map(c=>`<div class="${c.id===S.cur?"on":""}" onclick="S.cur=${c.id};renderChat()">💬 ${esc(c.title)}</div>`).join("");
+  const c=curChat();$("#chat").innerHTML=(c.msgs.length?"":'<div class="msg ai">Привіт! Надішли умову задачі — розберемо крок за кроком 👋</div>')+c.msgs.map(m=>`<div class="msg ${m.r==="user"?"me":"ai"}">${md(m.c)}</div>`).join("");
+  $("#chat").scrollTop=1e9;
+  $("#chips").innerHTML=c.msgs.length?"":CHIPS.map(t=>`<span>${esc(t)}</span>`).join("");
+  $$("#chips span").forEach(s=>s.onclick=()=>{$("#chatIn").value=s.textContent;$("#chatForm").requestSubmit()});
+  $("#aiState").textContent=LS.get("key","")?"🟢 Підключено справжній ШІ":"🟡 Демо-режим: працює локальний розв'язувач. Додай API-ключ у профілі для повноцінного ШІ."}
+$("#newChat").onclick=newChat;
+$("#aiClear").onclick=()=>{S.chats=S.chats.filter(c=>c.id!==S.cur);S.cur=null;saveAll();renderChat()};
+$("#aiToPost").onclick=()=>{const c=curChat(),u=[...c.msgs].reverse().find(m=>m.r==="user"),a=[...c.msgs].reverse().find(m=>m.r==="assistant");
+  if(!a)return toast("Спершу запитай ШІ");go("add");$("#title").value=(u?.c||"Задача").slice(0,60);$("#cond").value=u?.c||"";$("#body").value=a.c.replace(/\*\*/g,"");$("#subjIn").value=$("#aiSubj").value};
+$("#chatForm").onsubmit=async e=>{e.preventDefault();const v=$("#chatIn").value.trim();if(!v)return;$("#chatIn").value="";
+  const c=curChat();c.msgs.push({r:"user",c:v});if(c.title==="Новий чат")c.title=v.slice(0,28);renderChat();
+  const box=document.createElement("div");box.className="msg ai typing";box.textContent="Думаю…";$("#chat").append(box);$("#chat").scrollTop=1e9;
+  let a;try{a=await aiReply(c)}catch(err){a="⚠️ Помилка ШІ: "+err.message+"\nСпробую локально:\n"+localSolve(v)}
+  c.msgs.push({r:"assistant",c:a});saveAll();renderChat()};
+async function aiReply(c){
+  const key=LS.get("key","");if(!key){await new Promise(r=>setTimeout(r,500));return localSolve(c.msgs.at(-1).c)}
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:"claude-sonnet-5-5",max_tokens:1500,system:`Ти шкільний репетитор. Відповідай українською. Предмет: ${$("#aiSubj").value}. ${MODE[$("#aiMode").value]}`,messages:c.msgs.slice(-12).map(m=>({role:m.r,content:m.c}))})});
+  const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);return j.content.map(x=>x.text||"").join("")}
+function localSolve(q){
+  const eq=solveEq(q);if(eq)return eq;
+  const ex=q.match(/[\d(][\d+\-*/^().,\s]*[\d)]/);if(ex&&/[+\-*/^]/.test(ex[0])){const r=calc(ex[0]);if(r!==null)return `**Обчислення:** ${ex[0].trim()} = **${r}**`}
+  const f=S.posts.find(p=>q.toLowerCase().split(/\s+/).some(w=>w.length>4&&(p.title+p.cond).toLowerCase().includes(w)));
+  if(f)return `Схоже на розв'язок зі стрічки: **${f.title}**\n\n${f.body}\n\nВідповідь: ${f.ans}`;
+  return "У демо-режимі я вмію розв'язувати рівняння (x^2-5x+6=0, 2x+3=11) та рахувати вирази. Для будь-яких інших задач додай API-ключ у «Профіль»."}
+function calc(s){try{s=s.replace(/,/g,".").replace(/\^/g,"**").replace(/×/g,"*").replace(/÷/g,"/");if(!/^[\d+\-*/().\s]*$/.test(s))return null;const r=Function('"use strict";return ('+s+')')();return Number.isFinite(r)?+r.toFixed(10):null}catch{return null}}
+function solveEq(q){
+  let s=q.toLowerCase().replace(/\s+/g,"").replace(/²/g,"^2").replace(/,/g,".").replace(/−/g,"-");
+  const m=s.match(/([\dx.^+\-*()]+)=([\dx.^+\-*()]+)/);if(!m)return null;
+  const poly=t=>{t=t.replace(/(\d)x/g,"$1*x").replace(/^x/,"1*x").replace(/([+-])x/g,"$11*x");let c=[0,0,0];
+    for(const term of t.match(/[+-]?[^+-]+/g)||[]){const k=term.match(/^([+-]?[\d.]*)\*?x\^2$/);const l=term.match(/^([+-]?[\d.]*)\*?x$/);const n=term.match(/^[+-]?[\d.]+$/);
+      const num=x=>x===""||x==="+"?1:x==="-"?-1:parseFloat(x);if(k)c[2]+=num(k[1]);else if(l)c[1]+=num(l[1]);else if(n)c[0]+=parseFloat(term);else return null}return c};
+  const L=poly(m[1]),R=poly(m[2]);if(!L||!R)return null;const [c,b,a]=[L[0]-R[0],L[1]-R[1],L[2]-R[2]];
+  if(!a&&!b)return null;
+  if(!a)return `**Лінійне рівняння** ${b}x ${c<0?"-":"+"} ${Math.abs(c)} = 0\n1) ${b}x = ${-c}\n2) x = ${-c} / ${b}\n**Відповідь: x = ${+(-c/b).toFixed(6)}**`;
+  const D=b*b-4*a*c;let o=`**Квадратне рівняння** ${a}x² ${b<0?"-":"+"} ${Math.abs(b)}x ${c<0?"-":"+"} ${Math.abs(c)} = 0\n1) D = b² − 4ac = ${b*b} − ${4*a*c} = **${D}**\n`;
+  if(D<0)return o+"2) D < 0 — дійсних коренів немає.\n**Відповідь: розв'язків немає**";
+  const x1=(-b+Math.sqrt(D))/(2*a),x2=(-b-Math.sqrt(D))/(2*a),f=n=>+n.toFixed(6);
+  return D===0?o+`2) D = 0 → x = −b/2a = **${f(x1)}**\n**Відповідь: x = ${f(x1)}**`:o+`2) x₁ = (−b + √D)/2a = **${f(x1)}**\n3) x₂ = (−b − √D)/2a = **${f(x2)}**\n**Відповідь: x = ${f(x1)}; ${f(x2)}**`}
+
+/* ІНСТРУМЕНТИ */
+$("#calcGo").onclick=()=>{const v=$("#calcIn").value.trim(),o=$("#calcOut");if(!v)return;
+  const r=v.includes("=")?solveEq(v):(calc(v)!==null?`${v} = ${calc(v)}`:null);o.hidden=false;o.textContent=(r||"Не вдалося розпізнати вираз").replace(/\*\*/g,"")};
+$("#calcIn").onkeydown=e=>{if(e.key==="Enter")$("#calcGo").click()};
+let tm=null,left=25*60;const draw=()=>{$("#clock").textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0")};
+$("#pLen").onchange=()=>{if(!tm){left=$("#pLen").value*60;draw()}};
+$("#pStart").onclick=()=>{if(tm){clearInterval(tm);tm=null;$("#pStart").textContent="Старт";return}
+  $("#pStart").textContent="Пауза";tm=setInterval(()=>{if(--left<=0){clearInterval(tm);tm=null;left=0;$("#pStart").textContent="Старт";toast("⏰ Час вийшов! Зроби перерву")}draw()},1000)};
+$("#pReset").onclick=()=>{clearInterval(tm);tm=null;left=$("#pLen").value*60;$("#pStart").textContent="Старт";draw()};
+$("#notes").value=LS.get("notes","");$("#notes").oninput=()=>LS.set("notes",$("#notes").value);
+$("#hwAdd").onclick=()=>{const t=$("#hwIn").value.trim();if(!t)return;S.hw.push({id:Date.now(),t,d:$("#hwDate").value,done:false});$("#hwIn").value="";saveAll();renderHw()};
+function renderHw(){const a=[...S.hw].sort((x,y)=>x.done-y.done||(x.d||"9").localeCompare(y.d||"9"));
+  $("#hwList").innerHTML=a.length?a.map(h=>`<div class="lb"><input type="checkbox" style="width:auto" ${h.done?"checked":""} onchange="hwT(${h.id})"><span style="flex:1;${h.done?"text-decoration:line-through;opacity:.5":""}">${esc(h.t)}</span><small style="color:${h.d&&h.d<new Date().toISOString().slice(0,10)&&!h.done?"var(--bad)":"var(--mut)"}">${esc(h.d)}</small><button class="btn sm ghost" onclick="hwD(${h.id})">✕</button></div>`).join(""):'<div class="empty">Все зроблено 🎉</div>'}
+window.hwT=id=>{const h=S.hw.find(x=>x.id===id);h.done=!h.done;saveAll();renderHw()};window.hwD=id=>{S.hw=S.hw.filter(x=>x.id!==id);saveAll();renderHw()};
+
+/* РЕЙТИНГ */
+function renderLb(){const m={};S.posts.forEach(p=>{if(!p.anon)m[p.author]??={n:p.author,a:p.ava,posts:0};if(!p.anon)m[p.author].posts++});
+  const a=Object.values(m).map(x=>({...x,pts:pointsOf(x.n)})).sort((x,y)=>y.pts-x.pts);
+  $("#lb").innerHTML=a.length?a.map((x,i)=>`<div class="lb"><b style="width:28px">${["🥇","🥈","🥉"][i]||i+1}</b><div class="ava">${esc(x.a)}</div><b style="flex:1">${esc(x.n)}</b><span>${x.posts} розв. · <b>${x.pts}</b> балів</span></div>`).join(""):'<div class="empty">Поки порожньо</div>'}
+
+/* ПРОФІЛЬ */
+function renderProf(){$("#pNick").value=S.me.nick;$("#pAva").value=S.me.ava;$("#pCls").value=S.me.cls;$("#apiKey").value=LS.get("key","");
+  const mine=S.posts.filter(p=>p.author===S.me.nick);
+  $("#stats").innerHTML=[["Розв'язків",mine.length],["Лайків",mine.reduce((s,p)=>s+p.up,0)],["Балів",pointsOf(S.me.nick)],["Збережено",S.fav.length],["Чатів з ШІ",S.chats.length]].map(([k,v])=>`<div class="stat"><b>${v}</b>${k}</div>`).join("")}
+$("#pSave").onclick=()=>{const n=$("#pNick").value.trim();if(!n)return toast("Введи нік");
+  const old=S.me.nick;S.me={nick:n,ava:$("#pAva").value,cls:+$("#pCls").value};S.posts.forEach(p=>{if(p.author===old){p.author=n;p.ava=S.me.ava}});saveAll();renderMe();toast("Збережено")};
+$("#keySave").onclick=()=>{LS.set("key",$("#apiKey").value.trim());toast("Ключ збережено")};
+const setTheme=t=>{document.documentElement.dataset.theme=t;LS.set("theme",t)};setTheme(LS.get("theme","dark"));
+$("#theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#exp").onclick=()=>{const b=new Blob([JSON.stringify({posts:S.posts,reqs:S.reqs,hw:S.hw,me:S.me},null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="shpargalka.json";a.click()};
+$("#impB").onclick=()=>$("#imp").click();
+$("#imp").onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(Array.isArray(d.posts))S.posts=d.posts;if(Array.isArray(d.reqs))S.reqs=d.reqs;if(Array.isArray(d.hw))S.hw=d.hw;if(d.me?.nick)S.me=d.me;saveAll();renderMe();renderProf();toast("Імпортовано")}catch{toast("Невірний файл")}};
+$("#wipe").onclick=()=>{if(confirm("Стерти ВСІ дані?")){try{localStorage.clear()}catch{}location.reload()}};
+
+if(window.api)document.documentElement.classList.add("electron");
+document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn");if(!b)return;const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height),i=document.createElement("span");
+  i.className="ripple";i.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;b.append(i);setTimeout(()=>i.remove(),600)});
+draw();renderMe();renderFeed();
+</script>
+</body>
+</html>
