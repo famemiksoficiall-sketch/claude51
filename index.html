@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Шпаргалка — розв'язки та ШІ-чат</title>
+<style>
+:root{--bg:#0f1020;--panel:#1a1b33;--panel2:#23244a;--text:#eef0ff;--mut:#9a9dc8;--acc:#7c5cff;--acc2:#22d3a6;--bad:#ff5c7a;--r:16px}
+*{box-sizing:border-box;margin:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(1200px 600px at 10% -10%,#2a2570 0,transparent 60%),var(--bg);color:var(--text);min-height:100vh}
+header{display:flex;align-items:center;gap:12px;padding:14px 20px;position:sticky;top:0;background:#0f1020cc;backdrop-filter:blur(10px);border-bottom:1px solid #ffffff14;z-index:5}
+.logo{font-weight:800;font-size:20px;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;color:transparent}
+nav{display:flex;gap:6px;margin-left:auto}
+nav button{background:none;border:0;color:var(--mut);padding:9px 14px;border-radius:10px;font-size:14px;cursor:pointer}
+nav button.on{background:var(--panel2);color:var(--text)}
+main{max-width:900px;margin:0 auto;padding:20px 16px 80px}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid #ffffff12;border-radius:var(--r);padding:16px;margin-bottom:14px}
+input,textarea,select{width:100%;background:var(--panel2);border:1px solid #ffffff18;color:var(--text);border-radius:12px;padding:11px 13px;font:inherit;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--acc)}
+textarea{resize:vertical;min-height:90px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:140px}
+.btn{background:linear-gradient(135deg,var(--acc),#5b8cff);color:#fff;border:0;border-radius:12px;padding:11px 18px;font-weight:600;cursor:pointer}
+.btn.ghost{background:var(--panel2)}
+h2{font-size:18px;margin-bottom:12px}
+.tag{display:inline-block;font-size:12px;background:var(--panel2);color:var(--acc2);padding:3px 9px;border-radius:99px;margin-right:6px}
+.post h3{margin:8px 0 6px}
+.post pre{white-space:pre-wrap;background:#0b0c1c;padding:12px;border-radius:12px;margin:8px 0;font-family:ui-monospace,monospace;font-size:13px}
+.meta{color:var(--mut);font-size:12px;display:flex;gap:12px;align-items:center;margin-top:8px}
+.meta button{background:none;border:0;color:var(--mut);cursor:pointer}
+.meta button:hover{color:var(--text)}
+#chat{height:55vh;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:4px}
+.msg{max-width:80%;padding:10px 14px;border-radius:16px;line-height:1.45;white-space:pre-wrap}
+.msg.me{align-self:flex-end;background:linear-gradient(135deg,var(--acc),#5b8cff)}
+.msg.ai{align-self:flex-start;background:var(--panel2)}
+.send{display:flex;gap:10px;margin-top:12px}
+.empty{color:var(--mut);text-align:center;padding:30px}
+@media(max-width:560px){nav button{padding:8px 9px;font-size:13px}.logo{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">📝 Шпаргалка</div>
+  <nav>
+    <button data-t="feed" class="on">Стрічка</button>
+    <button data-t="add">Додати</button>
+    <button data-t="ai">ШІ-чат</button>
+  </nav>
+</header>
+<main>
+  <section id="feed" class="tab on">
+    <div class="row card">
+      <input id="q" placeholder="🔍 Пошук за назвою або текстом">
+      <select id="subj"><option value="">Усі предмети</option></select>
+    </div>
+    <div id="list"></div>
+  </section>
+
+  <section id="add" class="tab">
+    <div class="card">
+      <h2>Виклади розв'язок</h2>
+      <div class="row" style="margin-bottom:10px">
+        <input id="title" placeholder="Назва (напр. «Алгебра, §12, №5»)">
+        <select id="subjIn"></select>
+      </div>
+      <input id="author" placeholder="Твій нік" style="margin-bottom:10px">
+      <textarea id="body" placeholder="Умова та розв'язок…"></textarea>
+      <div style="margin-top:12px"><button class="btn" id="pub">Опублікувати</button></div>
+    </div>
+  </section>
+
+  <section id="ai" class="tab">
+    <div class="card">
+      <h2>🤖 ШІ-помічник</h2>
+      <div id="chat"></div>
+      <form class="send" id="chatForm">
+        <input id="chatIn" placeholder="Запитай про задачу…" autocomplete="off">
+        <button class="btn" style="flex:none">Надіслати</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+const subjects=["Математика","Алгебра","Геометрія","Фізика","Хімія","Українська мова","Історія","Англійська","Інформатика"];
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+let posts=store.get("posts",[{id:1,title:"Алгебра: розв'язати x² − 5x + 6 = 0",subj:"Алгебра",author:"demo",body:"D = 25 − 24 = 1\nx₁ = (5+1)/2 = 3\nx₂ = (5−1)/2 = 2\nВідповідь: 2; 3",likes:3,t:Date.now()}]);
+const save=()=>store.set("posts",posts);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+subjects.forEach(s=>{$("#subj").add(new Option(s,s));$("#subjIn").add(new Option(s,s))});
+$("#author").value=store.get("nick","");
+
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button,.tab").forEach(e=>e.classList.remove("on"));
+  b.classList.add("on");$("#"+b.dataset.t).classList.add("on");
+});
+
+function render(){
+  const q=$("#q").value.toLowerCase(),s=$("#subj").value;
+  const items=posts.filter(p=>(!s||p.subj===s)&&(p.title+p.body).toLowerCase().includes(q)).sort((a,b)=>b.t-a.t);
+  $("#list").innerHTML=items.length?items.map(p=>`<article class="card post">
+    <span class="tag">${esc(p.subj)}</span>
+    <h3>${esc(p.title)}</h3><pre>${esc(p.body)}</pre>
+    <div class="meta"><span>@${esc(p.author)}</span><span>${new Date(p.t).toLocaleDateString("uk")}</span>
+    <button onclick="like(${p.id})">👍 ${p.likes}</button><button onclick="copyP(${p.id})">📋 Копіювати</button></div>
+  </article>`).join(""):'<div class="empty">Нічого не знайдено 🤷</div>';
+}
+window.like=id=>{const p=posts.find(x=>x.id===id);p.likes++;save();render()};
+window.copyP=id=>{const p=posts.find(x=>x.id===id);navigator.clipboard?.writeText(p.title+"\n\n"+p.body)};
+$("#q").oninput=$("#subj").onchange=render;
+
+$("#pub").onclick=()=>{
+  const title=$("#title").value.trim(),body=$("#body").value.trim(),author=$("#author").value.trim()||"аноним";
+  if(!title||!body){alert("Додай назву й розв'язок");return}
+  store.set("nick",author);
+  posts.push({id:Date.now(),title,body,author,subj:$("#subjIn").value,likes:0,t:Date.now()});
+  save();$("#title").value=$("#body").value="";render();
+  document.querySelector('nav [data-t=feed]').click();
+};
+
+// ШІ-чат: демо-відповіді. Для реального ШІ підключи свій API у функції aiReply.
+const chat=$("#chat");
+function add(role,text){const d=document.createElement("div");d.className="msg "+role;d.textContent=text;chat.append(d);chat.scrollTop=chat.scrollHeight}
+async function aiReply(q){
+  await new Promise(r=>setTimeout(r,600));
+  const eq=q.match(/x\^?2|x²/i);
+  if(eq)return "Це квадратне рівняння. Знайди дискримінант D = b² − 4ac, потім x = (−b ± √D) / 2a. Скинь коефіцієнти — розберемо крок за кроком.";
+  const found=posts.find(p=>q.toLowerCase().split(/\s+/).some(w=>w.length>4&&p.title.toLowerCase().includes(w)));
+  if(found)return `Схоже на розв'язок зі стрічки: «${found.title}». Подивись його й поясню кроки.`;
+  return "Опиши умову докладніше (предмет, клас, що дано й що знайти) — і я допоможу розібратися з розв'язком.";
+}
+add("ai","Привіт! Я ШІ-помічник. Надішли умову задачі — допоможу її розв'язати 👋");
+$("#chatForm").onsubmit=async e=>{
+  e.preventDefault();const v=$("#chatIn").value.trim();if(!v)return;
+  $("#chatIn").value="";add("me",v);add("ai",await aiReply(v));
+};
+render();
+</script>
+</body>
+</html>
