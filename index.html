@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>AZURE — An Icon in Motion</title>
+<meta name="description" content="A cinematic 3D product experience for AZURE, a fictional cola." />
+<meta name="theme-color" content="#050b1f" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --navy:#050b1f; --blue:#0b3fb3; --silver:#c9d1dc; --red:#e0262f; --white:#f4f7fb; --muted:#aab6cc;
+  --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
+  --sl:env(safe-area-inset-left,0px); --sr:env(safe-area-inset-right,0px);
+  --display:"Anton","Arial Narrow",Impact,sans-serif;
+  --ui:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--navy);color:var(--white);font-family:var(--ui);-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden;min-height:100vh}
+body.is-loading{overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid #8fb4ff;outline-offset:4px;border-radius:6px}
+.skip{position:fixed;left:12px;top:-80px;z-index:70;padding:10px 14px;background:var(--white);color:var(--navy);border-radius:8px;font-weight:600;text-decoration:none}
+.skip:focus{top:calc(12px + var(--st))}
+
+#gl{position:fixed;inset:0;width:100vw;height:100vh;height:100lvh;display:block;z-index:0}
+
+/* NAV */
+.nav{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:calc(14px + var(--st)) calc(20px + var(--sr)) 14px calc(20px + var(--sl));
+  background:linear-gradient(to bottom,rgba(4,9,26,.78),rgba(4,9,26,0));pointer-events:none}
+.nav > *{pointer-events:auto}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:20px;letter-spacing:.18em;padding:6px 4px}
+.brand svg{width:20px;height:20px}
+.nav-list{display:flex;gap:2px;list-style:none}
+.nav-list button{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .3s,background .3s}
+.nav-list button:hover{color:var(--white)}
+.nav-list button[aria-current="true"]{color:var(--white);background:rgba(255,255,255,.08)}
+.nav-list .n{font-variant-numeric:tabular-nums;opacity:.7}
+.nav-list .dot{display:none;width:7px;height:7px;border-radius:50%;background:currentColor}
+@media (max-width:820px){
+  .nav-list .label,.nav-list .n{display:none}
+  .nav-list .dot{display:block}
+  .nav-list button{padding:12px 7px}
+}
+
+/* SCENES */
+main{position:relative;z-index:1}
+.scene{position:relative;min-height:120vh;display:flex;align-items:center;padding:0 calc(7vw + var(--sr)) 0 calc(7vw + var(--sl))}
+.copy{position:relative;isolation:isolate;max-width:min(36rem,44vw);opacity:0;transform:translate3d(0,28px,0);
+  transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.copy::before{content:"";position:absolute;inset:-30% -35% -30% -40%;z-index:-1;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(3,8,24,.55),rgba(3,8,24,0))}
+.scene.is-active .copy{opacity:1;transform:none}
+.eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;gap:12px;align-items:center}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--red)}
+h1,h2{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.95;letter-spacing:.01em;text-shadow:0 2px 30px rgba(0,0,0,.35);outline:none}
+h1{font-size:clamp(2.8rem,6.4vw,6.2rem)}
+h2{font-size:clamp(2.3rem,5vw,4.8rem)}
+.lede{margin-top:22px;font-size:clamp(1rem,1.2vw,1.125rem);line-height:1.6;color:#d6deea;max-width:30rem}
+.cta-row{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border-radius:999px;font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--white);color:var(--navy);transition:transform .3s,box-shadow .3s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.btn--ghost{background:rgba(255,255,255,.06);color:var(--white);box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+.scroll-cue{position:absolute;left:50%;bottom:calc(28px + var(--sb));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);padding:8px}
+.scroll-cue i{width:1px;height:42px;background:linear-gradient(var(--white),transparent);animation:cue 2.2s ease-in-out infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.scene--detail{align-items:flex-end;padding-bottom:16vh}
+
+footer{position:relative;z-index:1;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;
+  padding:26px calc(7vw + var(--sr)) calc(26px + var(--sb)) calc(7vw + var(--sl));font-size:13px;color:var(--muted);
+  border-top:1px solid rgba(255,255,255,.08);background:rgba(4,12,40,.55);backdrop-filter:blur(8px)}
+footer .links{display:flex;gap:4px;flex-wrap:wrap}
+footer button{padding:10px 12px;border-radius:999px}
+footer button:hover{color:var(--white)}
+
+@media (max-width:820px){
+  .scene{min-height:110vh;align-items:flex-start;padding:calc(92px + var(--st)) calc(22px + var(--sr)) 0 calc(22px + var(--sl))}
+  .copy{max-width:100%}
+  .scene--detail{align-items:flex-start;padding-bottom:0}
+  h1{font-size:clamp(2.4rem,11vw,3.6rem)} h2{font-size:clamp(2.1rem,9.5vw,3.2rem)}
+  .lede{font-size:.98rem;margin-top:14px}
+  .cta-row{margin-top:22px}
+}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 40%,#0b1d4f 0%,#040918 70%);transition:opacity .9s ease,visibility .9s}
+#loader.done{opacity:0;visibility:hidden}
+.loader-inner{width:min(320px,76vw);text-align:center}
+.loader-mark{font-family:var(--display);font-size:42px;letter-spacing:.3em;margin-right:-.3em}
+.bar{margin:26px 0 14px;height:2px;background:rgba(255,255,255,.12);overflow:hidden;border-radius:2px}
+.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--silver),var(--white));transition:width .35s ease}
+#loader p{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* FALLBACK */
+#fallback{display:none}
+body.no-webgl #gl{display:none}
+body.no-webgl #fallback{display:block;position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 70% 50%,#123a9c,#050b1f 65%)}
+body.no-webgl .copy{opacity:1;transform:none}
+#fallback svg{position:absolute;right:9vw;top:50%;transform:translateY(-50%);height:min(70vh,560px);width:auto;filter:drop-shadow(0 30px 60px rgba(0,0,0,.5))}
+#fallback .note{position:absolute;right:7vw;bottom:calc(24px + var(--sb));font-size:12px;color:var(--muted);max-width:24rem;text-align:right}
+@media (max-width:820px){ #fallback svg{right:50%;top:auto;bottom:8vh;transform:translateX(50%);height:44vh;opacity:.9} #fallback .note{display:none} }
+
+.notice{position:fixed;left:50%;bottom:calc(20px + var(--sb));transform:translateX(-50%);z-index:40;padding:10px 16px;border-radius:999px;background:rgba(5,11,31,.88);font-size:13px;display:none}
+.notice.show{display:block}
+
+@media (prefers-reduced-motion:reduce){ .copy{transition:opacity .4s linear;transform:none} .scroll-cue i{animation:none} }
+body.reduced .copy{transition:opacity .4s linear;transform:none}
+body.reduced .scroll-cue i{animation:none}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+</head>
+<body class="is-loading">
+<a class="skip" href="#story">Skip to content</a>
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<div id="fallback" aria-hidden="true">
+  <svg viewBox="0 0 240 440" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="fbBody" x1="0" x2="1"><stop offset="0" stop-color="#061a52"/><stop offset=".35" stop-color="#1550d0"/><stop offset=".55" stop-color="#0b3aa8"/><stop offset="1" stop-color="#040f33"/></linearGradient>
+      <linearGradient id="fbMetal" x1="0" x2="1"><stop offset="0" stop-color="#6d7684"/><stop offset=".4" stop-color="#eef2f7"/><stop offset=".6" stop-color="#b9c1cc"/><stop offset="1" stop-color="#4a525e"/></linearGradient>
+    </defs>
+    <path d="M40 40 Q42 22 72 18 L168 18 Q198 22 200 40 L210 72 L210 380 Q210 404 190 412 L50 412 Q30 404 30 380 L30 72 Z" fill="url(#fbMetal)"/>
+    <rect x="30" y="74" width="180" height="298" fill="url(#fbBody)"/>
+    <rect x="30" y="318" width="180" height="7" fill="#e0262f"/>
+    <path d="M120 108 142 130 120 152 98 130Z" fill="#f4f7fb"/>
+    <path d="M108 134 120 122 132 134 132 140 120 129 108 140Z" fill="#e0262f"/>
+    <text x="120" y="252" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="72" fill="#f4f7fb" letter-spacing="2">AZURE</text>
+    <text x="120" y="296" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="15" letter-spacing="8" fill="#f4f7fb">COLA</text>
+  </svg>
+  <p class="note">Live 3D isn’t available in this browser, so you’re seeing a still poster. All content remains readable.</p>
+</div>
+
+<div id="loader" role="status" aria-live="polite">
+  <div class="loader-inner">
+    <div class="loader-mark">AZURE</div>
+    <div class="bar"><span id="bar-fill"></span></div>
+    <p id="loader-text">Preparing studio — 0%</p>
+  </div>
+</div>
+
+<header class="nav">
+  <button class="brand" type="button" data-goto="0" aria-label="AZURE — back to the opening">
+    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1 19 10 10 19 1 10Z" fill="#f4f7fb"/><path d="M4.6 11.4 10 6l5.4 5.4v2.4L10 8.5l-5.4 5.3Z" fill="#e0262f"/></svg>
+    <span>AZURE</span>
+  </button>
+  <nav aria-label="Scenes">
+    <ol class="nav-list">
+      <li><button type="button" data-goto="0" aria-label="Scene 1: Reveal"><span class="dot" aria-hidden="true"></span><span class="n">01</span><span class="label">Reveal</span></button></li>
+      <li><button type="button" data-goto="1" aria-label="Scene 2: Detail"><span class="dot" aria-hidden="true"></span><span class="n">02</span><span class="label">Detail</span></button></li>
+      <li><button type="button" data-goto="2" aria-label="Scene 3: Factory"><span class="dot" aria-hidden="true"></span><span class="n">03</span><span class="label">Factory</span></button></li>
+      <li><button type="button" data-goto="3" aria-label="Scene 4: Cold"><span class="dot" aria-hidden="true"></span><span class="n">04</span><span class="label">Cold</span></button></li>
+      <li><button type="button" data-goto="4" aria-label="Scene 5: Energy"><span class="dot" aria-hidden="true"></span><span class="n">05</span><span class="label">Energy</span></button></li>
+      <li><button type="button" data-goto="5" aria-label="Scene 6: Focus"><span class="dot" aria-hidden="true"></span><span class="n">06</span><span class="label">Focus</span></button></li>
+    </ol>
+  </nav>
+</header>
+
+<main id="story">
+  <section class="scene" id="reveal" data-scene="0" aria-labelledby="h-reveal">
+    <div class="copy">
+      <p class="eyebrow">01 / 06 · AZURE Original Cola</p>
+      <h1 id="h-reveal" tabindex="-1">An icon.<br>In motion.</h1>
+      <p class="lede">One can, one continuous take — from the first line of light to the last cold drop.</p>
+    </div>
+    <button class="scroll-cue" type="button" data-goto="1"><span>Scroll</span><i aria-hidden="true"></i></button>
+  </section>
+
+  <section class="scene scene--detail" id="detail" data-scene="1" aria-labelledby="h-detail">
+    <div class="copy">
+      <p class="eyebrow">02 / 06 · Material</p>
+      <h2 id="h-detail" tabindex="-1">Precision in<br>every detail.</h2>
+      <p class="lede">Rolled rims, a recessed lid, a riveted tab and a scored panel. Every surface meets the light in its own way.</p>
+    </div>
+  </section>
+
+  <section class="scene" id="factory" data-scene="2" aria-labelledby="h-factory">
+    <div class="copy">
+      <p class="eyebrow">03 / 06 · The line</p>
+      <h2 id="h-factory" tabindex="-1">Engineered<br>to be iconic.</h2>
+      <p class="lede">Steel, light and rhythm. The same can rides the line, through the inspection gate and on.</p>
+    </div>
+  </section>
+
+  <section class="scene" id="cold" data-scene="3" aria-labelledby="h-cold">
+    <div class="copy">
+      <p class="eyebrow">04 / 06 · Cold</p>
+      <h2 id="h-cold" tabindex="-1">Turn down the<br>temperature.</h2>
+      <p class="lede">Condensation gathers, the light sharpens, and the air goes still.</p>
+    </div>
+  </section>
+
+  <section class="scene" id="energy" data-scene="4" aria-labelledby="h-energy">
+    <div class="copy">
+      <p class="eyebrow">05 / 06 · Energy</p>
+      <h2 id="h-energy" tabindex="-1">Make the<br>moment.</h2>
+      <p class="lede">One confident turn. One arc of cola. Then stillness.</p>
+    </div>
+  </section>
+
+  <section class="scene scene--final" id="final" data-scene="5" aria-labelledby="h-final">
+    <div class="copy">
+      <p class="eyebrow">06 / 06 · Focus</p>
+      <h2 id="h-final" tabindex="-1">AZURE.<br>In full focus.</h2>
+      <p class="lede">The same can that stepped out of the dark, now resting in clean light.</p>
+      <div class="cta-row">
+        <button class="btn" type="button" id="explore">Explore the experience</button>
+        <button class="btn btn--ghost" type="button" data-goto="1">Revisit the details</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 AZURE — a fictional brand created for this demo.</span>
+  <div class="links">
+    <button type="button" id="motion-toggle" aria-pressed="false">Reduce motion: Off</button>
+    <button type="button" data-goto="0">Back to top ↑</button>
+  </div>
+</footer>
+
+<div class="notice" id="notice" role="status" aria-live="polite"></div>
+<noscript><p style="position:relative;z-index:2;padding:24px">This experience needs JavaScript for the live 3D can. The text content above remains available.</p></noscript>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+/* =========================================================================
+   CONFIG — all choreography, lighting moods and quality targets live here.
+   sc = "scene coordinate": 0 = scene 1 settled, 1 = scene 2 centred, … 5 = final.
+   rot is degrees, Euler order ZXY (spin around the can's own axis first).
+   ========================================================================= */
+const CONFIG = {
+  damping: 5.5,                      // scroll smoothing (higher = snappier)
+  intro: { duration: 3.4, push: 2.6, spin: 22 },
+  envFade: 0.14,
+  envWindows: { studio:[-9,1.5], factory:[1.5,2.56], cold:[2.56,3.5], energy:[3.5,4.48], final:[4.48,99] },
+  belt: { x0:2.8, x1:22.2, top:-0.40, period:0.12, followMin:4.6, followMax:20.6 },
+  surfaces: [ {x0:2.8,x1:22.2,y:-0.40}, {x0:22.2,x1:30.5,y:-0.72}, {x0:30.5,x1:60,y:-0.50} ],
+  defaultFloor: -1.6,
+  clampY: [ {x0:7.6,x1:20.5,minY:0.21}, {x0:30.5,x1:60,minY:0.11} ],
+  ribbon: { start:3.52, end:4.36 },
+  keys: [
+    // Scene 1 — reveal
+    { sc:0.00, can:[0,0,0],        rot:[4,-28,9],     cam:[0.05,0.16,4.4], look:[0,0.02,0],    fov:32, frame:[0.16,0.03], dof:0 },
+    { sc:0.40, can:[0,0.04,0],     rot:[3,-38,7],     cam:[0.2,0.22,3.9],  look:[0,0.05,0],    fov:32, frame:[0.16,0.03], dof:0 },
+    // Scene 2 — macro
+    { sc:0.78, can:[0,0,0],        rot:[26,-75,3],    cam:[0.38,0.98,1.8], look:[0,0.5,0],     fov:30, frame:[0.07,0],    dof:0.8, calm:[18,-40,3] },
+    { sc:1.00, can:[0,0,0],        rot:[32,-155,2],   cam:[-0.18,1.02,1.5],look:[0,0.56,0],    fov:30, frame:[0.07,0],    dof:1.0, calm:[22,-60,2] },
+    { sc:1.22, can:[0,0,0],        rot:[10,-250,4],   cam:[-0.45,0.36,1.6],look:[0,0.25,0],    fov:30, frame:[0.08,0],    dof:0.6, calm:[10,-30,3] },
+    { sc:1.42, can:[0.4,0.15,0],   rot:[2,-340,6],    cam:[0.6,0.32,2.8],  look:[0.4,0.1,0],   fov:32, frame:[0.12,0.02], dof:0.1, calm:[2,-20,4] },
+    // Scene 3 — factory
+    { sc:1.68, can:[5.0,1.05,0],   rot:[0,-20,14],    cam:[3.4,1.0,4.6],   look:[4.8,0.5,0],   fov:34, frame:[0.14,0.02], dof:0 },
+    { sc:1.88, can:[8.0,0.21,0],   rot:[0,-24,0],     cam:[6.2,0.95,4.0],  look:[8.0,0.22,0],  fov:34, frame:[0.14,0.02], dof:0, landY:true },
+    { sc:2.05, can:[11.5,0.21,0],  rot:[0,-24,0],     cam:[9.9,1.05,3.8],  look:[11.5,0.25,0], fov:34, frame:[0.12,0.02], dof:0, landY:true },
+    { sc:2.30, can:[15.0,0.21,0],  rot:[0,-24,0],     cam:[13.6,1.15,3.4], look:[15.0,0.3,0],  fov:34, frame:[0.10,0.02], dof:0, landY:true },
+    { sc:2.48, can:[18.6,0.21,0],  rot:[0,-24,0],     cam:[17.4,1.0,3.6],  look:[18.6,0.3,0],  fov:34, frame:[0.10,0.02], dof:0, landY:true },
+    // Scene 4 — cold
+    { sc:2.68, can:[21.6,0.75,0],  rot:[0,-20,6],     cam:[20.2,1.0,3.8],  look:[21.6,0.55,0], fov:33, frame:[0.12,0.02], dof:0 },
+    { sc:3.00, can:[26.0,0.45,0],  rot:[0,-30,4],     cam:[25.2,0.75,3.1], look:[26.0,0.4,0],  fov:32, frame:[0.14,0.03], dof:0.15 },
+    { sc:3.32, can:[26.0,0.47,0],  rot:[0,-14,3],     cam:[25.4,0.55,2.6], look:[26.0,0.42,0], fov:31, frame:[0.13,0.03], dof:0.2 },
+    // Scene 5 — energy (spin → suspended beat → deceleration)
+    { sc:3.62, can:[26.3,1.25,0],  rot:[14,-120,22],  cam:[25.0,1.1,4.1],  look:[26.3,1.15,0], fov:33, frame:[0.13,0.02], dof:0, calm:[3,-25,5] },
+    { sc:3.86, can:[26.45,1.48,0], rot:[18,-235,26],  cam:[25.2,1.3,4.0],  look:[26.45,1.35,0],fov:33, frame:[0.13,0.02], dof:0, calm:[3,-30,5] },
+    { sc:4.02, can:[26.5,1.45,0],  rot:[12,-300,16],  cam:[25.4,1.3,3.9],  look:[26.5,1.32,0], fov:33, frame:[0.13,0.02], dof:0, calm:[3,-28,4] },
+    { sc:4.30, can:[26.6,1.3,0],   rot:[6,-338,8],    cam:[25.8,1.2,3.8],  look:[26.6,1.2,0],  fov:33, frame:[0.13,0.02], dof:0, calm:[2,-24,3] },
+    // Scene 6 — final hero
+    { sc:4.66, can:[36.4,0.6,0],   rot:[4,-350,8],    cam:[35.2,0.9,4.6],  look:[36.4,0.45,0], fov:32, frame:[0.12,0.03], dof:0 },
+    { sc:5.00, can:[37.6,0.11,0],  rot:[0,-332,0],    cam:[36.7,0.62,4.3], look:[37.6,0.18,0], fov:30, frame:[0.15,0.05], dof:0 },
+  ],
+  lighting: {
+    studio:  { bg:'#040a1e', fog:0.07,  env:0.55, exposure:1.0,  key:['#ffffff',2.0], rim:['#9cc0ff',5.0], rim2:['#5d86ff',3.2], hemi:['#2a4a9a','#02040c',0.3], bloom:0.28 },
+    factory: { bg:'#06090f', fog:0.055, env:0.45, exposure:1.05, key:['#fff3e4',2.6], rim:['#d4e3ff',3.0], rim2:['#ffffff',1.8], hemi:['#8090a8','#0a0c10',0.6], bloom:0.5 },
+    cold:    { bg:'#03183a', fog:0.085, env:0.7,  exposure:1.05, key:['#d8ecff',2.2], rim:['#7fd0ff',6.0], rim2:['#3a7bff',4.0], hemi:['#4f8fd8','#020a1c',0.45], bloom:0.32 },
+    energy:  { bg:'#071c5c', fog:0.06,  env:0.8,  exposure:1.1,  key:['#ffffff',2.8], rim:['#f
