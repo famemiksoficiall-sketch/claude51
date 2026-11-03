@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
 :root{
-  --navy:#050b1f; --blue:#0b3fb3; --silver:#c9d1dc; --red:#e0262f; --white:#f4f7fb; --muted:#aab6cc;
+  --navy:#050b1f; --silver:#c9d1dc; --red:#e0262f; --white:#f4f7fb; --muted:#aab6cc;
   --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
   --sl:env(safe-area-inset-left,0px); --sr:env(safe-area-inset-right,0px);
   --display:"Anton","Arial Narrow",Impact,sans-serif;
@@ -25,10 +25,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid #8fb4ff;outline-offset:4px;border-radius:6px}
 .skip{position:fixed;left:12px;top:-80px;z-index:70;padding:10px 14px;background:var(--white);color:var(--navy);border-radius:8px;font-weight:600;text-decoration:none}
 .skip:focus{top:calc(12px + var(--st))}
-
 #gl{position:fixed;inset:0;width:100vw;height:100vh;height:100lvh;display:block;z-index:0}
 
-/* NAV */
 .nav{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;
   padding:calc(14px + var(--st)) calc(20px + var(--sr)) 14px calc(20px + var(--sl));
   background:linear-gradient(to bottom,rgba(4,9,26,.78),rgba(4,9,26,0));pointer-events:none}
@@ -47,7 +45,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .nav-list button{padding:12px 7px}
 }
 
-/* SCENES */
 main{position:relative;z-index:1}
 .scene{position:relative;min-height:120vh;display:flex;align-items:center;padding:0 calc(7vw + var(--sr)) 0 calc(7vw + var(--sl))}
 .copy{position:relative;isolation:isolate;max-width:min(36rem,44vw);opacity:0;transform:translate3d(0,28px,0);
@@ -86,7 +83,6 @@ footer button:hover{color:var(--white)}
   .cta-row{margin-top:22px}
 }
 
-/* LOADER */
 #loader{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 40%,#0b1d4f 0%,#040918 70%);transition:opacity .9s ease,visibility .9s}
 #loader.done{opacity:0;visibility:hidden}
 .loader-inner{width:min(320px,76vw);text-align:center}
@@ -95,7 +91,6 @@ footer button:hover{color:var(--white)}
 .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--silver),var(--white));transition:width .35s ease}
 #loader p{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
 
-/* FALLBACK */
 #fallback{display:none}
 body.no-webgl #gl{display:none}
 body.no-webgl #fallback{display:block;position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 70% 50%,#123a9c,#050b1f 65%)}
@@ -106,7 +101,6 @@ body.no-webgl .copy{opacity:1;transform:none}
 
 .notice{position:fixed;left:50%;bottom:calc(20px + var(--sb));transform:translateX(-50%);z-index:40;padding:10px 16px;border-radius:999px;background:rgba(5,11,31,.88);font-size:13px;display:none}
 .notice.show{display:block}
-
 @media (prefers-reduced-motion:reduce){ .copy{transition:opacity .4s linear;transform:none} .scroll-cue i{animation:none} }
 body.reduced .copy{transition:opacity .4s linear;transform:none}
 body.reduced .scroll-cue i{animation:none}
@@ -176,7 +170,6 @@ body.reduced .scroll-cue i{animation:none}
     </div>
     <button class="scroll-cue" type="button" data-goto="1"><span>Scroll</span><i aria-hidden="true"></i></button>
   </section>
-
   <section class="scene scene--detail" id="detail" data-scene="1" aria-labelledby="h-detail">
     <div class="copy">
       <p class="eyebrow">02 / 06 · Material</p>
@@ -184,7 +177,6 @@ body.reduced .scroll-cue i{animation:none}
       <p class="lede">Rolled rims, a recessed lid, a riveted tab and a scored panel. Every surface meets the light in its own way.</p>
     </div>
   </section>
-
   <section class="scene" id="factory" data-scene="2" aria-labelledby="h-factory">
     <div class="copy">
       <p class="eyebrow">03 / 06 · The line</p>
@@ -192,7 +184,6 @@ body.reduced .scroll-cue i{animation:none}
       <p class="lede">Steel, light and rhythm. The same can rides the line, through the inspection gate and on.</p>
     </div>
   </section>
-
   <section class="scene" id="cold" data-scene="3" aria-labelledby="h-cold">
     <div class="copy">
       <p class="eyebrow">04 / 06 · Cold</p>
@@ -200,7 +191,6 @@ body.reduced .scroll-cue i{animation:none}
       <p class="lede">Condensation gathers, the light sharpens, and the air goes still.</p>
     </div>
   </section>
-
   <section class="scene" id="energy" data-scene="4" aria-labelledby="h-energy">
     <div class="copy">
       <p class="eyebrow">05 / 06 · Energy</p>
@@ -208,7 +198,6 @@ body.reduced .scroll-cue i{animation:none}
       <p class="lede">One confident turn. One arc of cola. Then stillness.</p>
     </div>
   </section>
-
   <section class="scene scene--final" id="final" data-scene="5" aria-labelledby="h-final">
     <div class="copy">
       <p class="eyebrow">06 / 06 · Focus</p>
@@ -229,9 +218,8 @@ body.reduced .scroll-cue i{animation:none}
     <button type="button" data-goto="0">Back to top ↑</button>
   </div>
 </footer>
-
 <div class="notice" id="notice" role="status" aria-live="polite"></div>
-<noscript><p style="position:relative;z-index:2;padding:24px">This experience needs JavaScript for the live 3D can. The text content above remains available.</p></noscript>
+<noscript><p style="position:relative;z-index:2;padding:24px">This experience needs JavaScript for the live 3D can.</p></noscript>
 
 <script type="module">
 import * as THREE from 'three';
@@ -243,13 +231,12 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
-/* =========================================================================
-   CONFIG — all choreography, lighting moods and quality targets live here.
-   sc = "scene coordinate": 0 = scene 1 settled, 1 = scene 2 centred, … 5 = final.
-   rot is degrees, Euler order ZXY (spin around the can's own axis first).
-   ========================================================================= */
+/* =====================================================================
+   CONFIG — choreography, lighting moods, quality. sc = scene coordinate:
+   0 = scene 1 settled, 1 = scene 2 centred … 5 = final. rot in degrees (ZXY).
+   ===================================================================== */
 const CONFIG = {
-  damping: 5.5,                      // scroll smoothing (higher = snappier)
+  damping: 5.5,
   intro: { duration: 3.4, push: 2.6, spin: 22 },
   envFade: 0.14,
   envWindows: { studio:[-9,1.5], factory:[1.5,2.56], cold:[2.56,3.5], energy:[3.5,4.48], final:[4.48,99] },
@@ -259,35 +246,36 @@ const CONFIG = {
   clampY: [ {x0:7.6,x1:20.5,minY:0.21}, {x0:30.5,x1:60,minY:0.11} ],
   ribbon: { start:3.52, end:4.36 },
   keys: [
-    // Scene 1 — reveal
-    { sc:0.00, can:[0,0,0],        rot:[4,-28,9],     cam:[0.05,0.16,4.4], look:[0,0.02,0],    fov:32, frame:[0.16,0.03], dof:0 },
-    { sc:0.40, can:[0,0.04,0],     rot:[3,-38,7],     cam:[0.2,0.22,3.9],  look:[0,0.05,0],    fov:32, frame:[0.16,0.03], dof:0 },
-    // Scene 2 — macro
-    { sc:0.78, can:[0,0,0],        rot:[26,-75,3],    cam:[0.38,0.98,1.8], look:[0,0.5,0],     fov:30, frame:[0.07,0],    dof:0.8, calm:[18,-40,3] },
-    { sc:1.00, can:[0,0,0],        rot:[32,-155,2],   cam:[-0.18,1.02,1.5],look:[0,0.56,0],    fov:30, frame:[0.07,0],    dof:1.0, calm:[22,-60,2] },
-    { sc:1.22, can:[0,0,0],        rot:[10,-250,4],   cam:[-0.45,0.36,1.6],look:[0,0.25,0],    fov:30, frame:[0.08,0],    dof:0.6, calm:[10,-30,3] },
-    { sc:1.42, can:[0.4,0.15,0],   rot:[2,-340,6],    cam:[0.6,0.32,2.8],  look:[0.4,0.1,0],   fov:32, frame:[0.12,0.02], dof:0.1, calm:[2,-20,4] },
-    // Scene 3 — factory
-    { sc:1.68, can:[5.0,1.05,0],   rot:[0,-20,14],    cam:[3.4,1.0,4.6],   look:[4.8,0.5,0],   fov:34, frame:[0.14,0.02], dof:0 },
-    { sc:1.88, can:[8.0,0.21,0],   rot:[0,-24,0],     cam:[6.2,0.95,4.0],  look:[8.0,0.22,0],  fov:34, frame:[0.14,0.02], dof:0, landY:true },
-    { sc:2.05, can:[11.5,0.21,0],  rot:[0,-24,0],     cam:[9.9,1.05,3.8],  look:[11.5,0.25,0], fov:34, frame:[0.12,0.02], dof:0, landY:true },
-    { sc:2.30, can:[15.0,0.21,0],  rot:[0,-24,0],     cam:[13.6,1.15,3.4], look:[15.0,0.3,0],  fov:34, frame:[0.10,0.02], dof:0, landY:true },
-    { sc:2.48, can:[18.6,0.21,0],  rot:[0,-24,0],     cam:[17.4,1.0,3.6],  look:[18.6,0.3,0],  fov:34, frame:[0.10,0.02], dof:0, landY:true },
-    // Scene 4 — cold
-    { sc:2.68, can:[21.6,0.75,0],  rot:[0,-20,6],     cam:[20.2,1.0,3.8],  look:[21.6,0.55,0], fov:33, frame:[0.12,0.02], dof:0 },
-    { sc:3.00, can:[26.0,0.45,0],  rot:[0,-30,4],     cam:[25.2,0.75,3.1], look:[26.0,0.4,0],  fov:32, frame:[0.14,0.03], dof:0.15 },
-    { sc:3.32, can:[26.0,0.47,0],  rot:[0,-14,3],     cam:[25.4,0.55,2.6], look:[26.0,0.42,0], fov:31, frame:[0.13,0.03], dof:0.2 },
-    // Scene 5 — energy (spin → suspended beat → deceleration)
-    { sc:3.62, can:[26.3,1.25,0],  rot:[14,-120,22],  cam:[25.0,1.1,4.1],  look:[26.3,1.15,0], fov:33, frame:[0.13,0.02], dof:0, calm:[3,-25,5] },
-    { sc:3.86, can:[26.45,1.48,0], rot:[18,-235,26],  cam:[25.2,1.3,4.0],  look:[26.45,1.35,0],fov:33, frame:[0.13,0.02], dof:0, calm:[3,-30,5] },
-    { sc:4.02, can:[26.5,1.45,0],  rot:[12,-300,16],  cam:[25.4,1.3,3.9],  look:[26.5,1.32,0], fov:33, frame:[0.13,0.02], dof:0, calm:[3,-28,4] },
-    { sc:4.30, can:[26.6,1.3,0],   rot:[6,-338,8],    cam:[25.8,1.2,3.8],  look:[26.6,1.2,0],  fov:33, frame:[0.13,0.02], dof:0, calm:[2,-24,3] },
-    // Scene 6 — final hero
-    { sc:4.66, can:[36.4,0.6,0],   rot:[4,-350,8],    cam:[35.2,0.9,4.6],  look:[36.4,0.45,0], fov:32, frame:[0.12,0.03], dof:0 },
-    { sc:5.00, can:[37.6,0.11,0],  rot:[0,-332,0],    cam:[36.7,0.62,4.3], look:[37.6,0.18,0], fov:30, frame:[0.15,0.05], dof:0 },
+    { sc:0.00, can:[0,0,0],        rot:[4,-28,9],    cam:[0.05,0.16,4.4], look:[0,0.02,0],     fov:32, frame:[0.16,0.03], dof:0 },
+    { sc:0.40, can:[0,0.04,0],     rot:[3,-38,7],    cam:[0.2,0.22,3.9],  look:[0,0.05,0],     fov:32, frame:[0.16,0.03], dof:0 },
+    { sc:0.78, can:[0,0,0],        rot:[26,-75,3],   cam:[0.38,0.98,1.8], look:[0,0.5,0],      fov:30, frame:[0.07,0],    dof:0.8, calm:[18,-40,3] },
+    { sc:1.00, can:[0,0,0],        rot:[32,-155,2],  cam:[-0.18,1.02,1.5],look:[0,0.56,0],     fov:30, frame:[0.07,0],    dof:1.0, calm:[22,-60,2] },
+    { sc:1.22, can:[0,0,0],        rot:[10,-250,4],  cam:[-0.45,0.36,1.6],look:[0,0.25,0],     fov:30, frame:[0.08,0],    dof:0.6, calm:[10,-30,3] },
+    { sc:1.42, can:[0.4,0.15,0],   rot:[2,-340,6],   cam:[0.6,0.32,2.8],  look:[0.4,0.1,0],    fov:32, frame:[0.12,0.02], dof:0.1, calm:[2,-20,4] },
+    { sc:1.68, can:[5.0,1.05,0],   rot:[0,-20,14],   cam:[3.4,1.0,4.6],   look:[4.8,0.5,0],    fov:34, frame:[0.14,0.02], dof:0 },
+    { sc:1.88, can:[8.0,0.21,0],   rot:[0,-24,0],    cam:[6.2,0.95,4.0],  look:[8.0,0.22,0],   fov:34, frame:[0.14,0.02], dof:0, landY:true },
+    { sc:2.05, can:[11.5,0.21,0],  rot:[0,-24,0],    cam:[9.9,1.05,3.8],  look:[11.5,0.25,0],  fov:34, frame:[0.12,0.02], dof:0, landY:true },
+    { sc:2.30, can:[15.0,0.21,0],  rot:[0,-24,0],    cam:[13.6,1.15,3.4], look:[15.0,0.3,0],   fov:34, frame:[0.10,0.02], dof:0, landY:true },
+    { sc:2.48, can:[18.6,0.21,0],  rot:[0,-24,0],    cam:[17.4,1.0,3.6],  look:[18.6,0.3,0],   fov:34, frame:[0.10,0.02], dof:0, landY:true },
+    { sc:2.68, can:[21.6,0.75,0],  rot:[0,-20,6],    cam:[20.2,1.0,3.8],  look:[21.6,0.55,0],  fov:33, frame:[0.12,0.02], dof:0 },
+    { sc:3.00, can:[26.0,0.45,0],  rot:[0,-30,4],    cam:[25.2,0.75,3.1], look:[26.0,0.4,0],   fov:32, frame:[0.14,0.03], dof:0.15 },
+    { sc:3.32, can:[26.0,0.47,0],  rot:[0,-14,3],    cam:[25.4,0.55,2.6], look:[26.0,0.42,0],  fov:31, frame:[0.13,0.03], dof:0.2 },
+    { sc:3.62, can:[26.3,1.25,0],  rot:[14,-120,22], cam:[25.0,1.1,4.1],  look:[26.3,1.15,0],  fov:33, frame:[0.13,0.02], dof:0, calm:[3,-25,5] },
+    { sc:3.86, can:[26.45,1.48,0], rot:[18,-235,26], cam:[25.2,1.3,4.0],  look:[26.45,1.35,0], fov:33, frame:[0.13,0.02], dof:0, calm:[3,-30,5] },
+    { sc:4.02, can:[26.5,1.45,0],  rot:[12,-300,16], cam:[25.4,1.3,3.9],  look:[26.5,1.32,0],  fov:33, frame:[0.13,0.02], dof:0, calm:[3,-28,4] },
+    { sc:4.30, can:[26.6,1.3,0],   rot:[6,-338,8],   cam:[25.8,1.2,3.8],  look:[26.6,1.2,0],   fov:33, frame:[0.13,0.02], dof:0, calm:[2,-24,3] },
+    { sc:4.66, can:[36.4,0.6,0],   rot:[4,-350,8],   cam:[35.2,0.9,4.6],  look:[36.4,0.45,0],  fov:32, frame:[0.12,0.03], dof:0 },
+    { sc:5.00, can:[37.6,0.11,0],  rot:[0,-332,0],   cam:[36.7,0.62,4.3], look:[37.6,0.18,0],  fov:30, frame:[0.15,0.05], dof:0 },
   ],
   lighting: {
-    studio:  { bg:'#040a1e', fog:0.07,  env:0.55, exposure:1.0,  key:['#ffffff',2.0], rim:['#9cc0ff',5.0], rim2:['#5d86ff',3.2], hemi:['#2a4a9a','#02040c',0.3], bloom:0.28 },
-    factory: { bg:'#06090f', fog:0.055, env:0.45, exposure:1.05, key:['#fff3e4',2.6], rim:['#d4e3ff',3.0], rim2:['#ffffff',1.8], hemi:['#8090a8','#0a0c10',0.6], bloom:0.5 },
+    studio:  { bg:'#040a1e', fog:0.07,  env:0.55, exposure:1.0,  key:['#ffffff',2.0], rim:['#9cc0ff',5.0], rim2:['#5d86ff',3.2], hemi:['#2a4a9a','#02040c',0.3],  bloom:0.28 },
+    factory: { bg:'#06090f', fog:0.055, env:0.45, exposure:1.05, key:['#fff3e4',2.6], rim:['#d4e3ff',3.0], rim2:['#ffffff',1.8], hemi:['#8090a8','#0a0c10',0.6],  bloom:0.5 },
     cold:    { bg:'#03183a', fog:0.085, env:0.7,  exposure:1.05, key:['#d8ecff',2.2], rim:['#7fd0ff',6.0], rim2:['#3a7bff',4.0], hemi:['#4f8fd8','#020a1c',0.45], bloom:0.32 },
-    energy:  { bg:'#071c5c', fog:0.06,  env:0.8,  exposure:1.1,  key:['#ffffff',2.8], rim:['#f
+    energy:  { bg:'#071c5c', fog:0.06,  env:0.8,  exposure:1.1,  key:['#ffffff',2.8], rim:['#ff4a55',3.0], rim2:['#6aa2ff',5.0], hemi:['#3a5fd0','#040818',0.4],  bloom:0.36 },
+    final:   { bg:'#0e40a6', fog:0.04,  env:0.95, exposure:1.05, key:['#ffffff',3.0], rim:['#dbe8ff',3.6], rim2:['#a9c4ff',2.6], hemi:['#7aa4ff','#0a2a6a',0.7],  bloom:0.22 },
+  },
+};
+
+const IS_MOBILE = matchMedia('(max-width: 820px)').matches || matchMedia('(pointer: coarse)').matches;
+const FINE_POINTER = matchMedia('(hover: hover) and (pointer: fine)').matches;
+c
