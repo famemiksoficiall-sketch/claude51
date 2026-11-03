@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tilted Grid Hero</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #171717;
+    --muted: #f3f3f3;
+    --muted-fg: #737373;
+    --border: #e5e5e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0a0a;
+      --fg: #fafafa;
+      --muted: #262626;
+      --muted-fg: #a3a3a3;
+      --border: #262626;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .hero {
+    position: relative;
+    overflow: hidden;
+    container-type: size;
+    width: 100%;
+    max-width: 1200px;
+    height: min(560px, calc(100vh - 32px));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg);
+  }
+  .band {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .tile { position: absolute; transform-style: preserve-3d; }
+  .slice {
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    background: var(--muted);
+  }
+  .slice.first { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+  .slice.last { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+  .slice img {
+    position: absolute;
+    top: 0;
+    max-width: none;
+    object-fit: cover;
+    user-select: none;
+  }
+  .content {
+    position: relative;
+    z-index: 10;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 48px 24px;
+    text-align: center;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  p {
+    margin: 0;
+    max-width: 28rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--muted-fg);
+    text-wrap: balance;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile { animation-play-state: paused !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="hero" id="hero">
+    <div class="band" id="band" aria-hidden="true"></div>
+    <div class="content">
+      <h1>Каждый кадр —<br />в фокусе.</h1>
+      <p>Изображения выгибаются с одного края, выпрямляются в центре и растворяются у другого.</p>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // ── Настройки ──────────────────────────────────────────────
+  const SPEED = 4;          // секунд на смещение на одну плитку
+  const TILE_HEIGHT = 26;   // высота плитки, % высоты hero
+  const ASPECT = 16 / 9;    // ширина / высота плитки
+  const GAP = 6;            // зазор, % высоты плитки
+  const AXIS = 56;          // вертикальный центр ряда, %
+  const CURVE = 80;         // изгиб у края кадра, градусы (5–85)
+  const FADE = 12;          // ширина затухания по краям, %
+
+  const SLICES = 16;
+  const CAMERA = 1.6;
+  const MAX_WIDTH = 55;
+
+  const unsplash = (id) =>
+    `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&h=675&q=80`;
+  const IMAGES = [
+    "photo-1506905925346-21bda4d32df4",
+    "photo-1470071459604-3b5ec3a7fe05",
+    "photo-1441974231531-c6227db76b6e",
+    "photo-1507525428034-b723cf961d3e",
+    "photo-1501785888041-af3ef285b470",
+    "photo-1469474968028-56623f02e42e",
+    "photo-1447752875215-b2761acb3c5d",
+    "photo-1500530855697-b586d89ba3ee",
+    "photo-1433086966358-54859d0ed716",
+    "photo-1472214103451-9374bd1c798e",
+  ].map(unsplash);
+
+  // Градиенты-заглушки: видны, пока фото грузятся или если они недоступны.
+  const FALLBACKS = [
+    "linear-gradient(135deg,#ff9a8b,#ff6a88 55%,#ff99ac)",
+    "linear-gradient(135deg,#a1c4fd,#c2e9fb)",
+    "linear-gradient(135deg,#84fab0,#8fd3f4)",
+    "linear-gradient(135deg,#fbc2eb,#a6c1ee)",
+    "linear-gradient(135deg,#f6d365,#fda085)",
+    "linear-gradient(135deg,#667eea,#764ba2)",
+    "linear-gradient(135deg,#43e97b,#38f9d7)",
+    "linear-gradient(135deg,#fa709a,#fee140)",
+    "linear-gradient(135deg,#30cfd0,#330867)",
+    "linear-gradient(135deg,#ff758c,#ff7eb3)",
+  ];
+
+  const bend = (Math.min(85, Math.max(5, CURVE)) * Math.PI) / 180;
+  const arc = (b) => (CAMERA - 1 + Math.cos(b)) / (2 * CAMERA * Math.sin(b));
+
+  function measure(width, height) {
+    const h = Math.min((TILE_HEIGHT / 100) * height, ((MAX_WIDTH / 100) * width) / ASPECT);
+    const radius = width * arc(bend);
+    if (!(h > 0) || !(radius > 0)) return { columns: 2, sweep: 0, unit: 0, limit: 0 };
+    const deg = (rad) => (rad * 180) / Math.PI;
+    const unit = deg(h / radius);
+    const pitch = (ASPECT + GAP / 100) * unit;
+    const limit = deg(bend) + (ASPECT * unit) / 2;
+    const columns = Math.min(60, Math.max(2, Math.ceil((2 * limit) / pitch)));
+    const round = (n) => +n.toFixed(4);
+    const sweep = round((columns * pitch) / 2);
+    return { columns, sweep, unit: round(unit), limit: round(Math.min(sweep, limit)) };
+  }
+
+  const hero = document.getElementById("hero");
+  const band = document.getElementById("band");
+  const style = document.createElement("style");
+  document.head.appendChild(style);
+
+  const u = (n) =>
+    `calc(${+n.toFixed(4)} * min(${TILE_HEIGHT}cqh, ${+(MAX_WIDTH / ASPECT).toFixed(4)}cqw))`;
+  const r = 100 * arc(bend);
+  const radius = `${+r.toFixed(3)}cqw`;
+  const turn = (d) =>
+    `translateZ(${radius}) rotateY(${+d.toFixed(4)}deg) translateZ(-${radius})`;
+
+  const mask = `linear-gradient(90deg,transparent,#000 ${FADE}%,#000 ${100 - FADE}%,transparent)`;
+  band.style.perspective = `${+(r * CAMERA).toFixed(3)}cqw`;
+  band.style.perspectiveOrigin = `50% ${AXIS}%`;
+  band.style.maskImage = mask;
+  band.style.webkitMaskImage = mask;
+
+  // Предзагрузка всех картинок.
+  IMAGES.forEach((src) => { new Image().src = src; });
+
+  let current = null;
+  let build = 0;
+
+  function setImage(tileEl, index) {
+    const i = ((index % IMAGES.length) + IMAGES.length) % IMAGES.length;
+    if (tileEl.dataset.img === String(i)) return;
+    tileEl.dataset.img = String(i);
+    for (const slice of tileEl.children) {
+      slice.style.backgroundImage = FALLBACKS[i];
+      const img = slice.firstChild;
+      img.style.visibility = "hidden";
+      img.onload = () => { img.style.visibility = "visible"; };
+      img.src = IMAGES[i];
+      if (img.complete && img.naturalWidth) img.style.visibility = "visible";
+    }
+  }
+
+  function render(layout) {
+    const { columns, sweep, unit, limit } = layout;
+    const orbit = `tgh-orbit-${++build}`;
+    const hide = +(((sweep - limit) / (2 * sweep || 1)) * 100).toFixed(4);
+    style.textContent =
+      `@keyframes ${orbit}{` +
+      `from{transform:${turn(-sweep)}}to{transform:${turn(sweep)}}` +
+      `0%,${hide}%,${100 - hide}%,100%{visibility:hidden}` +
+      `${hide + 0.001}%,${100 - hide - 0.001}%{visibility:visible}}`;
+
+    const share = ASPECT / SLICES;
+    const duration = columns * SPEED;
+    band.textContent = "";
+
+    for (let t = 0; t < columns; t++) {
+      const first = columns - 1 - t;
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      Object.assign(tile.style, {
+        left: `calc(50% - ${u(ASPECT / 2)})`,
+        top: `calc(${AXIS}% - ${u(0.5)})`,
+        width: u(ASPECT),
+        height: u(1),
+        animation: `${orbit} ${duration}s linear ${-t * SPEED}s infinite`,
+      });
+
+      for (let k = 0; k < SLICES; k++) {
+        const slice = document.createElement("div");
+        slice.className = "slice" + (k === 0 ? " first" : "") + (k === SLICES - 1 ? " last" : "");
+        Object.assign(slice.style, {
+          left: u((ASPECT - share) / 2),
+          width: k === SLICES - 1 ? u(share) : `calc(${u(share)} + 1px)`,
+          height: u(1),
+          transform: turn((ASPECT / 2 - (k + 0.5) * share) * unit),
+          // Градиент-заглушка растянут на всю плитку, каждая полоска — свой кусок.
+          backgroundSize: `${u(ASPECT)} ${u(1)}`,
+          backgroundPosition: `${u(-k * share)} 0`,
+        });
+        const img = document.createElement("img");
+        img.alt = "";
+        img.draggable = false;
+        Object.assign(img.style, { left: u(-k * share), width: u(ASPECT), height: u(1) });
+        slice.appendChild(img);
+        tile.appendChild(slice);
+      }
+
+      setImage(tile, first);
+      // Плитка берёт следующую картинку, когда уходит за кадр.
+      tile.addEventListener("animationiteration", (e) => {
+        const lap = Math.round(e.elapsedTime / duration);
+        setImage(tile, lap * columns + first);
+      });
+      band.appendChild(tile);
+    }
+    band.style.opacity = "1";
+  }
+
+  new ResizeObserver(([entry]) => {
+    const { width, height } = entry.contentRect;
+    const next = measure(width, height);
+    if (
+      current &&
+      current.columns === next.columns &&
+      current.sweep === next.sweep &&
+      current.unit === next.unit
+    ) return;
+    current = next;
+    render(next);
+  }).observe(hero);
+})();
+</script>
+</body>
+</html>
