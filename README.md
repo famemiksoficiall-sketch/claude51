@@ -172,3 +172,7 @@ layout, so adjust `drawLabel()` in `src/product/canTextures.js` if your artwork'
 ## Browser support
 
 Current Chrome, Edge, Safari 16.4+ and Firefox (WebGL2 required for the 3D experience).
+
+## Standalone single-file build
+
+`pepsi-in-full-focus.html` is the whole site in one self-contained HTML file: scripts, styles, fonts and the fallback poster are all inlined. Open it directly in a browser; no server or network is needed. It was generated from the same sources with `vite-plugin-singlefile`. Rebuild it after changing the source.
