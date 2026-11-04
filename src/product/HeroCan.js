@@ -181,6 +181,10 @@ export class HeroCan {
         R,
       });
     }
+    // Sliding beads at the end of the buffer: per frame only that contiguous range changes.
+    this.drops.sort((a, b) => (a.slide ? 1 : 0) - (b.slide ? 1 : 0));
+    this._slideStart = this.drops.findIndex((d) => d.slide);
+    if (this._slideStart < 0) this._slideStart = count;
     this.dropletMesh = mesh;
     this._m = new THREE.Matrix4();
     this._q = new THREE.Quaternion();
@@ -195,12 +199,19 @@ export class HeroCan {
 
   _updateDroplets(wet, time, force = false) {
     const sliding = wet > 0.6;
-    if (!force && !sliding && Math.abs(wet - this._lastWet) < 0.002) return;
-    this._lastWet = wet;
+    const wetChanged = force || Math.abs(wet - this._lastWet) >= 0.002;
+    if (!wetChanged && !sliding) return;
     const mesh = this.dropletMesh;
     mesh.visible = wet > 0.02;
-    if (!mesh.visible && !force) return;
-    for (let i = 0; i < this.drops.length; i++) {
+    if (!mesh.visible && !force) {
+      this._lastWet = wet;
+      return;
+    }
+    // Wetness unchanged → only the sliding beads move.
+    const from = wetChanged ? 0 : this._slideStart;
+    if (wetChanged) this._lastWet = wet;
+    if (from >= this.drops.length) return;
+    for (let i = from; i < this.drops.length; i++) {
       const d = this.drops[i];
       const vis = THREE.MathUtils.smoothstep(wet, d.thr - 0.12, d.thr + 0.04);
       let y = d.y;
@@ -219,7 +230,10 @@ export class HeroCan {
       this._m.compose(this._p, this._q, this._s);
       mesh.setMatrixAt(i, this._m);
     }
-    mesh.instanceMatrix.needsUpdate = true;
+    const im = mesh.instanceMatrix;
+    im.clearUpdateRanges();
+    im.addUpdateRange(from * 16, (this.drops.length - from) * 16);
+    im.needsUpdate = true;
   }
 
   setWetness(wet, time) {

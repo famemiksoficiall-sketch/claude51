@@ -147,6 +147,15 @@ All of it lives in `src/config.js`:
   energy set and final studio are then built and pre-compiled one by one in the background.
 - **Rendering pauses** when the tab is hidden. Resizing is handled without stretching, and when the
   WebGL context is lost the scene is restored (including the environment map).
+- **Idle throttling.** When nothing is being driven (scroll smoothing settled, intro finished, pointer
+  at rest for 1.2 s) only slow secondary motion remains, so the loop renders at 30 fps until the next
+  input. Adaptive resolution ignores these throttled frames.
+- **GPU-side secondary motion.** Frost motes fall in the vertex shader. Of the condensation beads, only
+  the few that slide are rewritten each frame, as one contiguous buffer range.
+- **No `backdrop-filter` over the live canvas.** A blur behind the always-visible nav would be
+  recomputed every frame.
+- **Deterministic transparency order.** Backdrops draw first, then floors, then props, so ice and mist
+  never vanish behind a transparent wall at some camera angles.
 - **Allocation-free frame loop.** All temporaries are reused, materials are created once and draw
   calls are bounded.
 

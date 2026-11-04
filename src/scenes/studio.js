@@ -66,6 +66,8 @@ export class Studio {
     const backdrop = new THREE.Mesh(new THREE.CylinderGeometry(16, 16, 22, 64, 1, true, Math.PI * 0.62, Math.PI * 0.76), this.backdropMat);
     backdrop.material.side = THREE.BackSide;
     backdrop.position.set(x, 1, 4);
+    // Transparent layers draw in a fixed order (backdrop → floor → props), independent of camera angle.
+    backdrop.renderOrder = -10;
     this.group.add(backdrop);
 
     // Distant glossy studio floor far beneath the floating can.
@@ -77,6 +79,7 @@ export class Studio {
     floor.position.set(x, -3.4, 0);
     floor.receiveShadow = true;
     this.floor = floor;
+    floor.renderOrder = -5;
     this.group.add(floor);
   }
 

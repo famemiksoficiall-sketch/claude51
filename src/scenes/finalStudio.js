@@ -22,6 +22,8 @@ export class FinalStudio {
     this.cycMat.side = THREE.DoubleSide;
     const wall = new THREE.Mesh(this._cycGeometry(), this.cycMat);
     wall.position.set(X, floorY - 0.012, 0);
+    // Transparent layers draw in a fixed order (backdrop → floor → props), independent of camera angle.
+    wall.renderOrder = -10;
     this.group.add(wall);
 
     // Optional true planar reflection, under a glossy coat whose opacity grows towards
@@ -65,6 +67,7 @@ export class FinalStudio {
     floor.rotation.x = -Math.PI / 2;
     floor.position.set(X, floorY, 4.75);
     floor.receiveShadow = true;
+    floor.renderOrder = -5;
     this.group.add(floor);
   }
 

@@ -136,6 +136,9 @@ html:not(.is-loading) .loader {
   opacity: 0;
   visibility: hidden;
 }
+html:not(.is-loading) .loader__mark {
+  animation: none;
+}
 .loader__inner {
   width: min(320px, 76vw);
   text-align: center;
@@ -253,7 +256,7 @@ html:not(.is-loading) .loader {
 .nav__menu {
   appearance: none;
   border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(2, 8, 26, 0.4);
+  background: rgba(2, 8, 26, 0.62);
   color: var(--white);
   font: inherit;
   font-size: 13px;
@@ -265,8 +268,7 @@ html:not(.is-loading) .loader {
   align-items: center;
   gap: 10px;
   min-height: 40px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  /* No backdrop-filter: over a live WebGL canvas it would be re-blurred every frame. */
 }
 .nav__menu {
   display: none;
@@ -512,9 +514,7 @@ h2 {
   justify-content: space-between;
   padding: 22px calc(var(--gutter) + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(var(--gutter) + var(--safe-left));
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(2, 8, 26, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(2, 8, 26, 0.92);
   font-size: 12px;
   color: var(--text-dim);
 }

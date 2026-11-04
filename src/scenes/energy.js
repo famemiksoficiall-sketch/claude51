@@ -18,6 +18,8 @@ export class Energy {
     this.backMat = createBackdropMaterial({ base: '#010616', glow: '#1747c4', glowPos: [0.5, 0.5], glowSize: [0.28, 0.34], beams: 1 });
     const back = new THREE.Mesh(new THREE.PlaneGeometry(34, 20), this.backMat);
     back.position.set(E.x, E.y, -8);
+    // Transparent layers draw in a fixed order (backdrop → floor → props), independent of camera angle.
+    back.renderOrder = -10;
     this.group.add(back);
 
     // Ribbon rig follows the can's position (not its spin).

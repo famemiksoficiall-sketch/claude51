@@ -21,6 +21,8 @@ export class ColdChamber {
     this.wallMat = createBackdropMaterial({ base: '#020a1a', glow: '#1a4fa8', glowPos: [0.5, 0.45], glowSize: [0.3, 0.45] });
     const wall = new THREE.Mesh(new THREE.PlaneGeometry(30, 16), this.wallMat);
     wall.position.set(X, 2, -6.5);
+    // Transparent layers draw in a fixed order (backdrop → floor → props), independent of camera angle.
+    wall.renderOrder = -10;
     this.group.add(wall);
     this.stripMat = new THREE.MeshBasicMaterial({ color: new THREE.Color('#bfe1ff').multiplyScalar(2.6) });
     const strips = new THREE.InstancedMesh(new THREE.BoxGeometry(0.06, 7, 0.06), this.stripMat, 8);
@@ -43,6 +45,7 @@ export class ColdChamber {
     floor.rotation.x = -Math.PI / 2;
     floor.position.set(X, slabTop - 0.36, -1);
     floor.receiveShadow = true;
+    floor.renderOrder = -5;
     this.group.add(floor);
     const slab = new THREE.Mesh(
       new RoundedBoxGeometry(6.2, 0.36, 3.6, 3, 0.04),
@@ -79,12 +82,13 @@ export class ColdChamber {
       const front = Math.cos(ang) > 0.3;
       const stack = !front && rand() < 0.35 ? 1 : 0;
       this.cubes.push({
-        pos: new THREE.Vector3(X + Math.sin(ang) * r, slabTop + s * 0.45 + stack * s * 0.75, Math.cos(ang) * r),
+        pos: new THREE.Vector3(Math.sin(ang) * r, slabTop + s * 0.45 + stack * s * 0.75, Math.cos(ang) * r),
         rot: new THREE.Euler(rand() * 0.8, rand() * Math.PI, rand() * 0.8),
         scale: new THREE.Vector3(s, s * (0.85 + rand() * 0.25), s * (0.9 + rand() * 0.2)),
         delay: rand() * 0.55,
       });
     }
+    this.ice.position.x = X; // instances are local to the chamber centre
     this.group.add(this.ice);
     this._m = new THREE.Matrix4();
     this._q = new THREE.Quaternion();
@@ -113,24 +117,37 @@ export class ColdChamber {
     }
 
     // Frost motes.
+    // Positions are static seeds; the fall is computed on the GPU (no per-frame buffer upload).
     const count = quality.frost;
     const pos = new Float32Array(count * 3);
-    this.frostSeeds = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      this.frostSeeds[i * 3] = (rand() - 0.5) * 10;
-      this.frostSeeds[i * 3 + 1] = rand() * 6;
-      this.frostSeeds[i * 3 + 2] = (rand() - 0.5) * 6 - 0.5;
+      pos[i * 3] = (rand() - 0.5) * 10;
+      pos[i * 3 + 1] = rand() * 6;
+      pos[i * 3 + 2] = (rand() - 0.5) * 6 - 0.5;
     }
     const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     this.frostMat = new THREE.PointsMaterial({
       size: 0.03, map: createRadialTexture(64, [[0, 'rgba(255,255,255,1)'], [1, 'rgba(255,255,255,0)']]),
       color: '#d8ecff', transparent: true, depthWrite: false, opacity: 0, blending: THREE.AdditiveBlending,
     });
+    this.frostTime = { value: 0 };
+    this.frostMat.onBeforeCompile = (shader) => {
+      shader.uniforms.uTime = this.frostTime;
+      shader.vertexShader = shader.vertexShader
+        .replace('#include <common>', '#include <common>\nuniform float uTime;')
+        .replace('#include <begin_vertex>', `#include <begin_vertex>
+          float seed = float( gl_VertexID );
+          transformed.y = mod( position.y - uTime * 0.12, 6.0 );
+          transformed.x += sin( uTime * 0.3 + seed ) * 0.1;`);
+    };
+    this.frostMat.customProgramCacheKey = () => 'frost-gpu-v1';
     this.frost = new THREE.Points(geo, this.frostMat);
     this.frost.frustumCulled = false;
+    this.frost.position.set(X, slabTop - 0.2, 0);
     this.group.add(this.frost);
     this.slabTop = slabTop;
+    this._frostClock = 0;
   }
 
   _updateIce(w) {
@@ -175,14 +192,7 @@ export class ColdChamber {
     this.frost.visible = fa > 0.01;
     if (this.frost.visible) {
       this.frostMat.opacity = 0.7 * fa;
-      const p = this.frost.geometry.attributes.position;
-      const s = this.frostSeeds;
-      const speed = ctx.reducedMotion ? 0 : 0.12;
-      for (let i = 0; i < p.count; i++) {
-        const y = ((s[i * 3 + 1] - t * speed) % 6 + 6) % 6;
-        p.setXYZ(i, this.X + s[i * 3] + Math.sin(t * 0.3 + i) * 0.1, this.slabTop + y - 0.2, s[i * 3 + 2]);
-      }
-      p.needsUpdate = true;
+      if (!ctx.reducedMotion) this.frostTime.value = t;
     }
   }
 }

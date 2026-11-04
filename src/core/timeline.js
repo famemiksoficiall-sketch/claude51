@@ -42,6 +42,7 @@ class MonotoneTrack {
   }
 }
 
+const LIGHT_NAMES = ['key', 'rimL', 'rimR', 'top', 'accent'];
 const CHANNELS_SCALAR = ['studio', 'factory', 'cold', 'energy', 'final', 'wet', 'ice', 'mist', 'liquid', 'dof', 'envRot'];
 
 /** Resolve inheritance so every key carries every channel. */
@@ -140,6 +141,8 @@ export class Timeline {
     this._qb = new THREE.Quaternion();
     this._e = new THREE.Euler();
     this._axisY = new THREE.Vector3(0, 1, 0);
+    this._sNow = 0;
+    this._g = (name) => this.tracks[name].at(this._sNow, this._seg);
   }
 
   _segment(s) {
@@ -158,8 +161,8 @@ export class Timeline {
   evaluate(s) {
     const st = this.state;
     const seg = this._segment(s);
-    const T = this.tracks;
-    const g = (name) => T[name].at(s, seg);
+    const g = this._g;
+    this._sNow = s;
     st.s = s;
 
     st.can.pos.set(g('px'), g('py'), g('pz'));
@@ -193,7 +196,7 @@ export class Timeline {
     const w = u * u * (3 - 2 * u);
     const A = this.lightKeys[i];
     const B = this.lightKeys[Math.min(i + 1, this.lightKeys.length - 1)];
-    for (const name of ['key', 'rimL', 'rimR', 'top', 'accent']) {
+    for (const name of LIGHT_NAMES) {
       const L = st.lights[name];
       const a = A[name];
       const b = B[name];

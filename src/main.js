@@ -26,6 +26,11 @@ import { Post } from './fx/post.js';
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const html = document.documentElement;
+const RIG_LIGHTS = ['key', 'rimL', 'rimR', 'top', 'accent'];
+// When nothing is being driven (no scroll, intro done, pointer at rest) only slow secondary
+// motion remains, so the loop drops to this rate to save GPU time and battery.
+const IDLE_FPS = 30;
+const IDLE_AFTER = 1.2; // seconds without scroll/pointer/intro activity
 const params = new URLSearchParams(location.search);
 const DEBUG = params.has('debug');
 const smoothstep = (x, a, b) => {
@@ -366,6 +371,7 @@ async function boot() {
   let lastS = proxy.s;
   let activeSection = -1;
   let heroCopyReady = false;
+  let cueWasHidden = null;
 
   function frameState(dt, time) {
     const s = proxy.s;
@@ -415,7 +421,7 @@ async function boot() {
     camera.setViewOffset(size.w, size.h, (-fr.x * size.w) / 2, (fr.y * size.h) / 2, size.w, size.h);
 
     // ── Light rig ──
-    for (const name of ['key', 'rimL', 'rimR', 'top', 'accent']) {
+    for (const name of RIG_LIGHTS) {
       const l = rig[name];
       const s2 = L[name];
       l.position.copy(st.can.pos).add(s2.pos);
@@ -456,7 +462,11 @@ async function boot() {
       const on = s >= a && s <= b && (i !== 0 || heroCopyReady);
       if (copyEls[i].classList.contains('is-active') !== on) copyEls[i].classList.toggle('is-active', on);
     }
-    scrollCue.classList.toggle('is-hidden', s > 0.12 || !heroCopyReady);
+    const cueHidden = s > 0.12 || !heroCopyReady;
+    if (cueHidden !== cueWasHidden) {
+      cueWasHidden = cueHidden;
+      scrollCue.classList.toggle('is-hidden', cueHidden);
+    }
 
     ambience.update((s - lastS) / Math.max(dt, 1e-3));
     lastS = s;
@@ -516,12 +526,24 @@ async function boot() {
   let contextLost = false;
   const clock = new THREE.Clock();
   let elapsed = 0;
+  const idle = { for: 0, pending: 0, lastS: -1 };
   function loop() {
-    const dt = Math.min(clock.getDelta(), 1 / 15);
+    const raw = clock.getDelta();
+    // Activity: scroll smoothing still moving, intro playing, pointer parallax settling.
+    const active = Math.abs(proxy.s - idle.lastS) > 1e-4 || intro.t < 1
+      || Math.abs(pointer.x - pointer.sx) + Math.abs(pointer.y - pointer.sy) > 0.002;
+    idle.lastS = proxy.s;
+    idle.for = active ? 0 : idle.for + raw;
+    const throttled = idle.for > IDLE_AFTER;
+    idle.pending += raw;
+    if (throttled && idle.pending < 1 / IDLE_FPS - 0.002) return;
+    const dt = Math.min(idle.pending, 1 / 15);
+    idle.pending = 0;
     elapsed += dt;
     frameState(dt, elapsed);
     post.render(dt);
-    adapt(dt, elapsed);
+    // Only full-rate frames say anything about whether the GPU keeps up.
+    if (!throttled) adapt(dt, elapsed);
     if (DEBUG) debugEl.textContent = `s ${proxy.s.toFixed(3)} · ${Math.round(1 / Math.max(dt, 1e-3))} fps · dpr ${size.dpr.toFixed(2)} · calls ${renderer.info.render.calls}`;
   }
   function start() {
